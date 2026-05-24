@@ -368,6 +368,9 @@ function handleRequest(request, env) {
   const url = new URL(request.url);
   const path = normalizePath(url.pathname);
 
+  if (path === "/favicon.ico" || path === "/favicon.svg") return text(faviconSvg(), "image/svg+xml; charset=utf-8", {
+    "cache-control": "public, max-age=86400"
+  });
   if (path === "/robots.txt") return text(robots(env), "text/plain; charset=utf-8");
   if (path === "/sitemap.xml") return text(sitemap(env), "application/xml; charset=utf-8");
   if (path === "/rss.xml") return text(rss(env), "application/rss+xml; charset=utf-8");
@@ -705,6 +708,9 @@ function page(title, body, env, options = {}) {
   <meta name="description" content="${esc(description)}">
   ${robotsMeta}
   <link rel="canonical" href="${esc(canonical)}">
+  <link rel="icon" href="/favicon.svg?v=20260525" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.ico?v=20260525">
+  <link rel="apple-touch-icon" href="/favicon.svg?v=20260525">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="${esc(siteName(env))}">
   <meta property="og:title" content="${esc(title)}">
@@ -870,8 +876,16 @@ function siteEmail(env) {
   return env.SITE_EMAIL || "contact@galaxymale.com";
 }
 
-function text(content, contentType) {
-  return new Response(content, { headers: { "content-type": contentType } });
+function faviconSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#12315a"/>
+  <path d="M16 18h32v7H16zM16 29h32v7H16zM16 40h21v7H16z" fill="#fff"/>
+  <circle cx="46" cy="43" r="6" fill="#d50050"/>
+</svg>`;
+}
+
+function text(content, contentType, extraHeaders = {}) {
+  return new Response(content, { headers: { "content-type": contentType, ...extraHeaders } });
 }
 
 function esc(value) {
