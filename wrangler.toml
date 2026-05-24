@@ -1,0 +1,16 @@
+name = "galaxymale"
+main = "src/worker.js"
+compatibility_date = "2026-05-25"
+
+[vars]
+SITE_URL = "https://galaxymale.com"
+SITE_NAME = "보험업무 자료센터"
+SITE_EMAIL = "contact@galaxymale.com"
+
+[[routes]]
+pattern = "galaxymale.com/*"
+zone_name = "galaxymale.com"
+
+[[routes]]
+pattern = "www.galaxymale.com/*"
+zone_name = "galaxymale.com"
