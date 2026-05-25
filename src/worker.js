@@ -211,7 +211,6 @@ const ARTICLES = [
 ];
 
 const EDUCATION_CATEGORY = CATEGORY_DEFS.find((category) => category.slug === "education");
-const MERGED_CATEGORY_SLUGS = new Set(["auto", "fire", "dental"]);
 const HOME_GUIDE_ARTICLES = ARTICLES.filter((article) => article.categorySlug !== "education");
 
 export default {
@@ -239,7 +238,6 @@ function handleRequest(request, env) {
   });
 
   const category = CATEGORY_DEFS.find((item) => path === `/category/${item.slug}`);
-  if (category && MERGED_CATEGORY_SLUGS.has(category.slug)) return Response.redirect(siteUrl(env), 301);
   if (category && category.slug === "education") return page(category.title, categoryHtml(category), env, {
     description: category.description,
     canonical: `/category/${category.slug}/`
