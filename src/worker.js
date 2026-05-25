@@ -210,38 +210,9 @@ const ARTICLES = [
   })))
 ];
 
-const AUTHORITY_SOURCES = {
-  auto: [
-    ["보험다모아 자동차보험 비교", "https://e-insmarket.or.kr/"],
-    ["보험개발원", "https://www.kidi.or.kr/"],
-    ["자동차사고 과실비율 정보포털", "https://accident.knia.or.kr/"],
-    ["손해보험협회", "https://www.knia.or.kr/"]
-  ],
-  fire: [
-    ["한국화재보험협회", "https://www.kfpa.or.kr/"],
-    ["특수건물 정보조회", "https://ucis.kfpa.or.kr/underlist.do"],
-    ["정부24 건축물대장", "https://www.gov.kr/"],
-    ["국가법령정보센터", "https://www.law.go.kr/"]
-  ],
-  dental: [
-    ["손해보험협회 공시실", "https://kpub.knia.or.kr/"],
-    ["생명보험협회 공시실", "https://pub.insure.or.kr/"],
-    ["건강보험심사평가원", "https://www.hira.or.kr/"],
-    ["국민건강보험", "https://www.nhis.or.kr/"]
-  ],
-  education: [
-    ["보험연수원", "https://www.in.or.kr/"],
-    ["손해보험협회", "https://www.knia.or.kr/"],
-    ["생명보험협회", "https://www.klia.or.kr/"],
-    ["보험개발원", "https://www.kidi.or.kr/"]
-  ],
-  home: [
-    ["손해보험협회 공시실", "https://kpub.knia.or.kr/"],
-    ["생명보험협회", "https://www.klia.or.kr/"],
-    ["승강기민원24", "https://www.elevator.go.kr/"],
-    ["보험연수원", "https://www.in.or.kr/"]
-  ]
-};
+const EDUCATION_CATEGORY = CATEGORY_DEFS.find((category) => category.slug === "education");
+const MERGED_CATEGORY_SLUGS = new Set(["auto", "fire", "dental"]);
+const HOME_GUIDE_ARTICLES = ARTICLES.filter((article) => article.categorySlug !== "education");
 
 export default {
   async fetch(request, env) {
@@ -268,7 +239,8 @@ function handleRequest(request, env) {
   });
 
   const category = CATEGORY_DEFS.find((item) => path === `/category/${item.slug}`);
-  if (category) return page(category.title, categoryHtml(category), env, {
+  if (category && MERGED_CATEGORY_SLUGS.has(category.slug)) return Response.redirect(siteUrl(env), 301);
+  if (category && category.slug === "education") return page(category.title, categoryHtml(category), env, {
     description: category.description,
     canonical: `/category/${category.slug}/`
   });
@@ -306,7 +278,7 @@ function homeHtml(env) {
         <p>보험 업무에서 반복적으로 찾게 되는 전산 링크, 고객센터, 청구팩스, 약관확인, 청구서 자료와 카테고리별 가이드 글을 한 화면에 정리했습니다.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="#main-table">보험사 표 바로보기</a>
-          <a class="secondary-btn" href="/category/auto/">자동차 보험 가이드</a>
+          <a class="secondary-btn" href="#integrated-guides">통합 가이드 보기</a>
         </div>
       </div>
     </section>
@@ -319,12 +291,12 @@ function homeHtml(env) {
       </div>
       ${insurerTableHtml()}
     </section>
-    <section class="topics">
+    <section id="integrated-guides" class="topics">
       <header class="block-header">
-        <h2>홈 가이드 글</h2>
-        <p>자녀보험, 실손보험, 승강기보험, GA 필수 링크처럼 별도 검색 수요가 있는 자료를 가이드 글로 정리했습니다.</p>
+        <h2>통합 보험업무 가이드 글</h2>
+        <p>홈, 자동차 보험, 화재보험, 치아보험 자료를 하나로 묶었습니다. 위 자료 버튼과 대응되는 글을 바로 읽을 수 있게 구성했습니다.</p>
       </header>
-      <div class="guide-grid">${HOME_TOPICS.map((article) => guideCard(article)).join("")}</div>
+      <div class="guide-grid">${HOME_GUIDE_ARTICLES.map((article) => guideCard(article)).join("")}</div>
     </section>
     ${faqHtml("home")}
     <section class="content-block">
@@ -429,9 +401,8 @@ function insurerRowHtml(item, index) {
 }
 
 function articleHtml(article) {
-  const relatedCategory = CATEGORY_DEFS.find((category) => category.slug === article.categorySlug);
+  const relatedCategory = article.categorySlug === "education" ? EDUCATION_CATEGORY : null;
   const links = [[article.linkLabel, article.linkUrl], ...(article.extraLinks || [])].filter(([label, url]) => label && url);
-  const sources = sourceLinksForArticle(article);
   return `
     <article class="narrow article">
       <p class="eyebrow">${esc(article.category)}</p>
@@ -449,32 +420,14 @@ function articleHtml(article) {
         </ul>
       </div>
       ${articleLongSections(article)}
-      <section class="source-box">
-        <h2>출처 및 참고 링크</h2>
-        <p>아래 링크는 이 글의 외부 원자료와 함께 확인하면 좋은 공신력 있는 참고처입니다. 실제 신청, 접수, 청구, 교육 이수 전에는 해당 기관의 최신 공지와 원문을 기준으로 다시 확인해야 합니다.</p>
-        <div class="source-links">${sources.map(([label, href]) => `<a href="${esc(href)}" target="_blank" rel="nofollow noopener">${esc(label)}</a>`).join("")}</div>
-      </section>
       ${articleFaqHtml(article)}
       <section>
         <h2>함께 확인하면 좋은 자료</h2>
-        <p>${relatedCategory ? `${relatedCategory.label} 카테고리에는 이 글과 연결되는 다른 가이드가 함께 정리되어 있습니다.` : "홈 가이드에는 자녀보험, 실손보험, 승강기보험, GA 필수 링크처럼 자주 찾는 자료가 함께 정리되어 있습니다."} 한 자료만 보고 판단하면 누락이 생길 수 있으므로 관련 카테고리와 보험사 표를 같이 확인하는 방식이 좋습니다.</p>
-        <p><a class="text-link" href="${relatedCategory ? `/category/${relatedCategory.slug}/` : "/"}">${relatedCategory ? `${relatedCategory.label} 카테고리 보기` : "홈으로 돌아가기"}</a> · <a class="text-link" href="/compare/">보험사 전산 링크 비교표 보기</a></p>
+        <p>${relatedCategory ? `${relatedCategory.label} 카테고리에는 이 글과 연결되는 교육 가이드가 함께 정리되어 있습니다.` : "홈에는 자동차 보험, 화재보험, 치아보험, 자녀보험, 실손보험, 승강기보험, GA 필수 링크 자료가 한 화면에 정리되어 있습니다."} 한 자료만 보고 판단하면 누락이 생길 수 있으므로 관련 가이드와 보험사 표를 같이 확인하는 방식이 좋습니다.</p>
+        <p><a class="text-link" href="${relatedCategory ? `/category/${relatedCategory.slug}/` : "/"}">${relatedCategory ? `${relatedCategory.label} 카테고리 보기` : "통합 홈 가이드 보기"}</a> · <a class="text-link" href="/compare/">보험사 전산 링크 비교표 보기</a></p>
       </section>
     </article>
   `;
-}
-
-function sourceLinksForArticle(article) {
-  const key = article.categorySlug || "home";
-  const base = AUTHORITY_SOURCES[key] || AUTHORITY_SOURCES.home;
-  const direct = [[article.linkLabel, article.linkUrl], ...(article.extraLinks || [])].filter(([label, url]) => label && url);
-  const seen = new Set();
-  return [...direct, ...base].filter(([label, href]) => {
-    const id = `${label}|${href}`;
-    if (seen.has(id)) return false;
-    seen.add(id);
-    return true;
-  });
 }
 
 function articleLongSections(article) {
@@ -657,10 +610,8 @@ function page(title, body, env, options = {}) {
     <a class="brand" href="/">${esc(siteName(env))}</a>
     <nav>
       <a href="/">홈</a>
-      <a href="/category/auto/">자동차 보험</a>
-      <a href="/category/fire/">화재보험</a>
-      <a href="/category/dental/">치아보험</a>
       <a href="/category/education/">보험교육</a>
+      <a href="/compare/">보험사 표</a>
     </nav>
   </header>
   <main>${body}</main>
@@ -691,13 +642,13 @@ function css() {
   return `
     :root{--bg:#f5f7fa;--paper:#fff;--line:#d9e1ec;--text:#172033;--muted:#637083;--accent:#e6004f;--blue:#174ea6}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans KR",sans-serif;line-height:1.72;letter-spacing:0}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
-    .site-header{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1180px)/2));position:sticky;top:0;z-index:10}.brand{font-weight:900;color:#111827;font-size:20px}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{color:#26364d;font-weight:800;font-size:14px}
+    .site-header{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1180px)/2))}.brand{font-weight:900;color:#111827;font-size:20px}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{color:#26364d;font-weight:800;font-size:14px}
     main{max-width:1180px;margin:0 auto;padding:30px 18px 64px}.hero{background:#fff;border:1px solid var(--line);padding:34px;margin-bottom:16px}.eyebrow{margin:0 0 8px;color:var(--accent);font-weight:900}.hero h1,.narrow h1{margin:0 0 12px;font-size:36px;line-height:1.25;color:#111827}.hero p,.lead{font-size:18px;color:#334155;margin:0;word-break:keep-all}.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.primary-btn,.secondary-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 17px;border-radius:4px;font-weight:900}.primary-btn{background:#1d5fd1;color:#fff}.secondary-btn{background:#fff;color:#1e3a8a;border:1px solid #c7d7f5}.download-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 18px}.download-strip div{background:#fff;border-bottom:2px solid var(--accent);display:flex;align-items:center;justify-content:center;gap:14px;min-height:58px}.download-strip a{border:1px solid var(--accent);color:var(--accent);padding:9px 18px;font-weight:900}.link-groups{background:#fff;border:1px solid var(--line);padding:22px;margin-bottom:18px}.link-group{margin:0 0 26px}.link-group:last-child{margin-bottom:0}.link-group h2{font-size:25px;color:#72777d;margin:0 0 8px}.link-group div{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 24px}.link-group a,.pill-links a{display:flex;align-items:center;justify-content:center;min-height:28px;border:1px solid #cfd8e3;border-radius:999px;color:#344054;font-size:14px;background:#fff}.link-group a:hover,.pill-links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
     .table-section,.content-block,.narrow{background:#fff;border:1px solid var(--line);padding:24px;margin-top:18px}.narrow{max-width:920px;margin-left:auto;margin-right:auto}.narrow.wide{max-width:1180px}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:16px}.section-head h2,.block-header h2,.content-block h2,.narrow h2{margin:0;color:#111827}.section-head p,.block-header p{margin:0;color:var(--muted);max-width:640px}.table-wrap{overflow:auto;border:1px solid var(--line)}.data-table{width:100%;min-width:1080px;border-collapse:collapse;background:#fff}.data-table th{background:#fafafa;color:#111827;border-bottom:2px solid var(--accent);padding:9px 8px;text-align:center;white-space:nowrap}.data-table td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}.data-table td:first-child,.data-table th:first-child{border-left:0}.data-table tr.shaded td{background:#fafafa}.company{display:block;color:#111827;font-weight:900}.small-link{display:block;font-size:12px;color:#64748b}.browser-icons{display:inline-flex;gap:4px}.browser-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;font-weight:900}.browser-icon.chrome{background:#1a73e8}.browser-icon.edge{background:#16a3a8}.hand-link{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;color:#111827;font-size:25px;line-height:1;border-radius:50%}.hand-link:hover{background:#f1f5f9;text-decoration:none}.extra-link{display:block;font-size:12px;color:#64748b;margin-top:2px}
-    .topics{padding:28px 0}.topics.in-page{padding-bottom:10px}.block-header{margin-bottom:16px}.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px;color:var(--text);min-height:220px}.guide-card:hover{border-color:#8fb2e8;text-decoration:none}.guide-card span{font-size:13px;color:var(--accent);font-weight:900}.guide-card h2{font-size:19px;line-height:1.35;margin:8px 0;color:#111827}.guide-card p{margin:0;color:var(--muted);font-size:15px}.card-meta{display:flex;justify-content:space-between;margin-top:13px;color:#8b95a3;font-size:13px}.card-meta em{font-style:normal}.pill-links,.article-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.article-links a{display:flex;align-items:center;justify-content:center;border:1px solid var(--accent);color:var(--accent);min-height:42px;font-weight:900}.source-box{border:1px solid #d7e3f5;background:#fbfdff;padding:18px;margin-top:28px}.source-box h2{margin-top:0}.source-links{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.source-links a{border:1px solid #cfd8e3;background:#fff;padding:9px 12px;border-radius:4px;color:#1e3a8a;font-weight:800}.source-links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}.content-block.flush{margin:10px 0 20px}.faq{padding:26px 0}.faq-list{border-top:1px solid var(--line);background:#fff}.faq-list details,.article-faq details{border-bottom:1px solid var(--line);padding:0 6px}.faq-list summary,.article-faq summary{cursor:pointer;padding:15px 8px;font-weight:900;color:#111827}.faq-list summary span{color:#1e6bf0}.faq-list p,.article-faq p{margin:0;padding:0 8px 15px 24px;color:var(--muted)}.article-meta{font-size:14px!important;color:#64748b!important}.article h2{margin-top:30px}.article-checklist{border:1px solid #bfdbfe;background:#f8fbff;padding:18px;margin:22px 0}.article-checklist h2{margin-top:0}.info-list{border:1px solid var(--line);margin:22px 0}.info-list div{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line)}.info-list div:first-child{border-top:0}.info-list dt{background:#fafafa;padding:12px 14px;font-weight:900}.info-list dd{margin:0;padding:12px 14px}.text-link{font-weight:900;color:#a8003f}
+    .topics{padding:28px 0}.topics.in-page{padding-bottom:10px}.block-header{margin-bottom:16px}.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px;color:var(--text);min-height:220px}.guide-card:hover{border-color:#8fb2e8;text-decoration:none}.guide-card span{font-size:13px;color:var(--accent);font-weight:900}.guide-card h2{font-size:19px;line-height:1.35;margin:8px 0;color:#111827}.guide-card p{margin:0;color:var(--muted);font-size:15px}.card-meta{display:flex;justify-content:space-between;margin-top:13px;color:#8b95a3;font-size:13px}.card-meta em{font-style:normal}.pill-links,.article-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.article-links a{display:flex;align-items:center;justify-content:center;border:1px solid var(--accent);color:var(--accent);min-height:42px;font-weight:900}.content-block.flush{margin:10px 0 20px}.faq{padding:26px 0}.faq-list{border-top:1px solid var(--line);background:#fff}.faq-list details,.article-faq details{border-bottom:1px solid var(--line);padding:0 6px}.faq-list summary,.article-faq summary{cursor:pointer;padding:15px 8px;font-weight:900;color:#111827}.faq-list summary span{color:#1e6bf0}.faq-list p,.article-faq p{margin:0;padding:0 8px 15px 24px;color:var(--muted)}.article-meta{font-size:14px!important;color:#64748b!important}.article h2{margin-top:30px}.article-checklist{border:1px solid #bfdbfe;background:#f8fbff;padding:18px;margin:22px 0}.article-checklist h2{margin-top:0}.info-list{border:1px solid var(--line);margin:22px 0}.info-list div{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line)}.info-list div:first-child{border-top:0}.info-list dt{background:#fafafa;padding:12px 14px;font-weight:900}.info-list dd{margin:0;padding:12px 14px}.text-link{font-weight:900;color:#a8003f}
     .site-footer{background:#eef2f7;border-top:1px solid var(--line);padding:30px 18px}.footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:30px}.footer-inner p{margin:8px 0 0;color:#526173}.footer-links{display:grid;gap:8px;min-width:170px}.footer-links a{font-size:18px;color:#16304f}
-    @media(max-width:880px){.site-header{padding:14px 18px;align-items:flex-start;flex-direction:column}.hero h1,.narrow h1{font-size:28px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links,.source-links{grid-template-columns:1fr 1fr}.section-head{display:block}.footer-inner{display:block}.footer-links{margin-top:18px}.info-list div{grid-template-columns:1fr}.info-list dt{border-bottom:1px solid var(--line)}}
-    @media(max-width:540px){main{padding:20px 12px 44px}.hero,.table-section,.content-block,.narrow,.link-groups{padding:18px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links,.source-links{grid-template-columns:1fr}.download-strip div{justify-content:space-between;padding:10px}.data-table th,.data-table td{font-size:14px;padding:7px 6px}}
+    @media(max-width:880px){.site-header{padding:14px 18px;align-items:flex-start;flex-direction:column}.hero h1,.narrow h1{font-size:28px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links{grid-template-columns:1fr 1fr}.section-head{display:block}.footer-inner{display:block}.footer-links{margin-top:18px}.info-list div{grid-template-columns:1fr}.info-list dt{border-bottom:1px solid var(--line)}}
+    @media(max-width:540px){main{padding:20px 12px 44px}.hero,.table-section,.content-block,.narrow,.link-groups{padding:18px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links{grid-template-columns:1fr}.download-strip div{justify-content:space-between;padding:10px}.data-table th,.data-table td{font-size:14px;padding:7px 6px}}
   `;
 }
 
@@ -722,7 +673,7 @@ function sitemap(env) {
   const paths = [
     "/",
     "/compare/",
-    ...CATEGORY_DEFS.map((category) => `/category/${category.slug}/`),
+    "/category/education/",
     ...ARTICLES.map((article) => `/articles/${article.slug}/`),
     ...INSURERS.map(([slug]) => `/company/${slug}/`),
     "/about/",
@@ -737,7 +688,7 @@ function sitemap(env) {
 function rss(env) {
   const base = siteUrl(env);
   const items = [
-    ...CATEGORY_DEFS.map((category) => [`/category/${category.slug}/`, category.title, category.description]),
+    ["/category/education/", EDUCATION_CATEGORY.title, EDUCATION_CATEGORY.description],
     ...ARTICLES.map((article) => [`/articles/${article.slug}/`, article.title, article.excerpt])
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
