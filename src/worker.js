@@ -84,134 +84,23 @@ const EXTERNAL_LINKS = {
   "cu": { system: "https://openbank.cu.co.kr/?sub=6000", terms: "https://openbank.cu.co.kr/?sub=6000", claim: "http://xn--989an19aika.com/pdf/신협.pdf" }
 };
 
-const DOWNLOAD_LINKS = [
-  ["손해보험 치아보험 청구양식", "https://drive.google.com/drive/folders/1bX5P4mX_aeMeeipb9KgKPpfr_2gXJyX5?usp=share_link"],
-  ["생명보험 치아보험 청구양식", "https://drive.google.com/drive/folders/1ykzncdihaEM42L8rGB_ApDvylz_IJtG4?usp=share_link"],
-  ["보험사 소식지", "https://drive.google.com/drive/folders/16U8HvvqEaM-TdlwWVCNZ-nBb5JwAZ3Jw"]
-];
+const GUIDE_ARTICLES = [
+  { slug: "dental-nonlife-forms", category: "치아보험", title: "손해보험 치아보험 청구양식", excerpt: "손해보험 치아보험 청구양식을 내려받기 전 확인해야 할 서류, 작성 기준, 제출 방식 차이를 정리했습니다.", linkLabel: "손해보험 치아보험 청구양식", linkUrl: "https://drive.google.com/drive/folders/1bX5P4mX_aeMeeipb9KgKPpfr_2gXJyX5?usp=share_link" },
+  { slug: "dental-life-forms", category: "치아보험", title: "생명보험 치아보험 청구양식", excerpt: "생명보험 치아보험 청구양식과 치과치료확인서, 진료기록, 영상자료 준비 흐름을 정리했습니다.", linkLabel: "생명보험 치아보험 청구양식", linkUrl: "https://drive.google.com/drive/folders/1ykzncdihaEM42L8rGB_ApDvylz_IJtG4?usp=share_link" },
+  { slug: "auto-face-quote", category: "자동차 보험", title: "대면 간편견적", excerpt: "대면 상담 전 차량정보와 운전자 범위를 정리하고 간편견적 화면에서 확인해야 할 항목을 설명합니다.", linkLabel: "대면 간편견적", linkUrl: "https://kpub.knia.or.kr/carInsuranceDisc/insurance/carInsurance.do" },
+  { slug: "auto-premium-factor", category: "자동차 보험", title: "할인·할증요인 조회시스템", excerpt: "자동차보험 갱신 보험료가 변한 이유를 확인할 때 할인·할증요인 조회시스템에서 봐야 할 항목을 정리합니다.", linkLabel: "할인·할증요인 조회시스템", linkUrl: "https://prem.kidi.or.kr:1443/" },
+  { slug: "auto-insurance-development", category: "자동차 보험", title: "보험개발원 등록", excerpt: "차량과 운전자 정보가 보험개발원 조회 과정에서 어떻게 활용되는지 업무 기준으로 설명합니다.", linkLabel: "보험개발원 등록", linkUrl: "https://iics.kidi.or.kr/insuUserReal/viewInsuUserReal.do" },
+  { slug: "auto-fault-ratio", category: "자동차 보험", title: "과실비율 정보포털", excerpt: "교통사고 유형별 과실비율을 확인할 때 사고 상황 정리와 사례 검색이 필요한 이유를 안내합니다.", linkLabel: "과실비율 정보포털", linkUrl: "https://accident.knia.or.kr/" },
+  { slug: "fire-business-checklist", category: "화재보험", title: "사업장 화재보험 체크리스트", excerpt: "사업장 소재지, 건물 구조, 업종, 재고, 기계장치와 배상책임 담보를 함께 확인하는 기본 절차입니다.", linkLabel: "사업장 화재보험 체크리스트", linkUrl: "https://drive.google.com/file/d/1EonSnWsfZyOFjG7C5QjBbnutYbDyb9Ej/view?usp=drive_link" },
+  { slug: "fire-building-register", category: "화재보험", title: "건축물대장", excerpt: "건축물대장 용도, 구조, 연면적, 사용승인일을 기준으로 화재보험 가입 자료를 점검합니다.", linkLabel: "건축물대장", linkUrl: "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000098&HighCtgCD=A02004002&Mcode=10205" },
+  { slug: "education-institute", category: "보험교육", title: "보험연수원(등록교육, 보수교육)", excerpt: "보험연수원에서 등록교육과 보수교육 대상, 이수 상태, 과정 신청을 확인하는 방법을 안내합니다.", linkLabel: "보험연수원(등록교육, 보수교육)", linkUrl: "https://www.in.or.kr/" },
+  { slug: "medical-expense-underwriting-check", category: "실손보험", title: "실손보험 인수기준 확인", excerpt: "실손보험 가입 전 인수기준, 병력 고지, 기존 가입 여부와 보장 제한 가능성을 확인하는 순서입니다.", linkLabel: "실손보험 인수기준 확인", linkUrl: "https://kpub.knia.or.kr/productDisc/lostHealth/lostHealthDisclosure.do" },
+  { slug: "elevator-insurance-info-view", category: "승강기보험", title: "승강기 정보 열람", excerpt: "승강기 정보 열람 자료를 기준으로 의무보험, 관리 주체, 승강기 번호를 확인하는 방법입니다.", linkLabel: "승강기 정보 열람", linkUrl: "https://www.elevator.go.kr/opn/MainPage.do" },
+  { slug: "ga-product-compare", category: "GA 필수 링크", title: "대리점 협회 상품 비교", excerpt: "대리점 협회 상품 비교 자료를 업무에서 활용할 때 상품명, 기준일, 비교 항목을 확인하는 방법입니다.", linkLabel: "대리점 협회 상품 비교", linkUrl: "https://pcs.iaa.or.kr/comm/login.do;jsessionid=357FB2FFF6457E9A77A9080571C407B3" }
+].map((article) => ({ ...article, date: "2026-05-26" }));
 
-const CATEGORY_DEFS = [
-  {
-    slug: "auto",
-    label: "자동차 보험",
-    title: "자동차 보험 업무 가이드",
-    description: "자동차보험 비교견적, 다이렉트 계약, 할인·할증 조회, 과실비율과 합의금 계산 자료를 업무 순서대로 정리했습니다.",
-    links: [
-      ["대면 간편견적", "https://kpub.knia.or.kr/carInsuranceDisc/insurance/carInsurance.do"],
-      ["보험다모아 비교견적", "https://e-insmarket.or.kr/aimt/aimtRealIntro.knia"],
-      ["다이렉트 계약 체결", "http://다이렉트비교견적.com"],
-      ["할인·할증요인 조회시스템", "https://prem.kidi.or.kr:1443/"],
-      ["보험개발원 등록", "https://iics.kidi.or.kr/insuUserReal/viewInsuUserReal.do"],
-      ["합의금 계산기(사망·후유장해)", "http://lee2229.hubweb.net/호프만.xlsx"],
-      ["합의금 계산기(자손·자상)", "http://lee2229.hubweb.net/자손자상.xlsx"],
-      ["과실비율 정보포털", "https://accident.knia.or.kr/"],
-      ["카드사 무이자 할부", "https://www.bss-a.co.kr/common_popup/card.html"],
-      ["자동차보험 체크리스트(삼성화재)", "http://lee2229.hubweb.net/자동차보험체크리스트.hwp"]
-    ],
-    topics: [
-      ["auto-face-quote", "대면 간편견적 확인 방법", "대면 상담 전 차량정보와 운전자 범위를 정리하고 간편견적 화면에서 확인해야 할 항목을 설명합니다."],
-      ["auto-damoa-compare", "보험다모아 비교견적 보는 법", "보험다모아 비교 결과를 읽을 때 보험료만 보지 않고 담보와 특약을 함께 확인하는 기준을 정리합니다."],
-      ["auto-direct-contract", "다이렉트 자동차보험 계약 체결 체크", "온라인 다이렉트 계약 전에 계약자, 피보험자, 차량 정보와 결제 방식을 확인하는 순서를 안내합니다."],
-      ["auto-premium-factor", "할인·할증요인 조회시스템 활용", "갱신 보험료가 오른 이유를 확인할 때 할인·할증요인 조회시스템에서 봐야 할 항목을 정리합니다."],
-      ["auto-insurance-development", "보험개발원 등록 정보 확인", "차량과 운전자 정보가 보험개발원 조회 과정에서 어떻게 활용되는지 업무 관점으로 설명합니다."],
-      ["auto-settlement-death-disability", "사망·후유장해 합의금 계산 자료", "교통사고 사망 또는 후유장해 사고에서 계산 자료를 볼 때 주의할 기준을 정리합니다."],
-      ["auto-settlement-self-injury", "자손·자상 합의금 계산 자료", "자동차상해와 자기신체사고의 차이를 기준으로 합의금 계산 자료를 읽는 방법을 설명합니다."],
-      ["auto-fault-ratio", "과실비율 정보포털 활용 가이드", "교통사고 유형별 과실비율을 확인할 때 사례 검색과 사고 상황 정리가 왜 필요한지 안내합니다."],
-      ["auto-card-installment", "자동차보험 카드 무이자 할부 확인", "보험료 결제 전 카드사 무이자 할부 조건과 적용 기간을 확인하는 기준을 정리합니다."],
-      ["auto-checklist-samsung", "자동차보험 체크리스트 활용법", "갱신 전 운전자 범위, 담보, 특약, 긴급출동, 마일리지 항목을 놓치지 않는 체크 흐름입니다."]
-    ]
-  },
-  {
-    slug: "fire",
-    label: "화재보험",
-    title: "화재보험 업무 가이드",
-    description: "사업장 화재보험 체크리스트, 특수건물 조회, 건축물대장 확인과 업종별 가입 전 점검 기준을 정리했습니다.",
-    links: [
-      ["사업장 화재보험 체크리스트", "https://drive.google.com/file/d/1EonSnWsfZyOFjG7C5QjBbnutYbDyb9Ej/view?usp=drive_link"],
-      ["특수건물 정보조회(화재보험)", "https://ucis.kfpa.or.kr/underlist.do"],
-      ["건축물대장", "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000098&HighCtgCD=A02004002&Mcode=10205"]
-    ],
-    topics: [
-      ["fire-business-checklist", "사업장 화재보험 체크리스트", "사업장 소재지, 건물 구조, 업종, 재고, 기계장치와 배상책임 담보를 함께 확인하는 기본 절차입니다."],
-      ["fire-special-building", "특수건물 정보조회 확인", "특수건물 대상 여부를 확인하고 의무보험과 일반 화재보험 설계를 구분하는 기준을 설명합니다."],
-      ["fire-building-register", "건축물대장으로 보는 화재보험", "건축물대장 용도, 구조, 연면적, 사용승인일을 기준으로 화재보험 가입 자료를 점검합니다."],
-      ["fire-rental-store", "임대 사업장 화재보험 준비", "임차인과 임대인의 책임 범위, 시설 소유자 구분, 원상복구 비용을 확인하는 방법입니다."],
-      ["fire-restaurant", "음식점 화재보험 체크", "화기 사용, 배상책임, 식중독, 시설 집기, 휴업손해 등 음식점에서 자주 빠지는 항목을 정리합니다."],
-      ["fire-factory", "공장 화재보험 설계 자료", "공장 건물, 기계, 원재료, 완제품, 전기설비 정보를 분리해 정리하는 기준을 설명합니다."],
-      ["fire-public-use", "다중이용업소 화재보험", "다중이용업소에서 의무가입 여부와 배상책임 보장을 확인하는 흐름을 안내합니다."],
-      ["fire-inventory", "재고자산 화재보험 산정", "재고 금액이 계절별로 달라지는 업종에서 평균재고와 최고재고를 구분하는 방법입니다."],
-      ["fire-water-damage", "누수·배상책임 담보 확인", "화재보험과 함께 검토되는 누수, 임대인 배상, 시설소유자 배상책임 담보를 정리합니다."],
-      ["fire-renewal", "화재보험 갱신 전 확인사항", "갱신 시점에 업종 변경, 면적 변경, 설비 추가, 재고 증가를 다시 확인해야 하는 이유를 설명합니다."]
-    ]
-  },
-  {
-    slug: "dental",
-    label: "치아보험",
-    title: "치아보험 청구 가이드",
-    description: "손해보험·생명보험 치아보험 청구양식, 임플란트·크라운·충치치료 청구서류와 약관 확인 방법을 정리했습니다.",
-    links: DOWNLOAD_LINKS.slice(0, 2),
-    topics: [
-      ["dental-nonlife-forms", "손해보험 치아보험 청구양식", "손해보험사 치아보험 청구양식을 찾고 보험사별 제출 방식 차이를 확인하는 기준입니다."],
-      ["dental-life-forms", "생명보험 치아보험 청구양식", "생명보험사 치아보험 청구양식과 진료확인서, 진료기록, 영상자료 준비 흐름을 정리합니다."],
-      ["dental-implant", "임플란트 청구서류 준비", "임플란트 치료에서 발치일, 식립일, 보철일과 파노라마 사진을 확인해야 하는 이유를 설명합니다."],
-      ["dental-crown-bridge", "크라운·브릿지 청구 가이드", "크라운과 브릿지 청구 시 치료 원인, 치아 번호, 치료 일자를 정리하는 방법입니다."],
-      ["dental-caries", "충치치료 치아보험 청구", "레진, 인레이, 온레이 등 충치치료 항목별로 확인해야 할 서류와 약관 기준을 정리합니다."],
-      ["dental-periodontal", "치주치료 청구 확인", "치주질환 치료비 청구에서 진료기록과 치료 내용 확인이 필요한 이유를 설명합니다."],
-      ["dental-fracture", "치아파절 청구 가이드", "사고로 인한 치아파절 청구에서 사고일, 진단명, 치료계획을 정리하는 기준입니다."],
-      ["dental-records", "치과 진료기록 준비법", "치과 진료기록, 진료비 세부내역서, 영상자료를 보험사 요구에 맞춰 준비하는 흐름입니다."],
-      ["dental-waiting-period", "치아보험 면책·감액기간 확인", "가입 직후 청구에서 면책기간과 감액기간을 먼저 확인해야 하는 이유를 정리합니다."],
-      ["dental-terms-check", "치아보험 약관 확인 방법", "치아보험 약관에서 보장개시일, 보장횟수, 치료재료 기준을 찾는 방법입니다."]
-    ]
-  },
-  {
-    slug: "education",
-    label: "보험교육",
-    title: "보험교육 자료 가이드",
-    description: "손해보험, 생명보험, 변액 교재와 모의고사, 보험연수원 등록교육·보수교육을 한곳에서 확인할 수 있게 정리했습니다.",
-    links: [
-      ["손보(교재/모의고사)", "https://drive.google.com/file/d/1QELPqi9tYbXuAEIytcbAKGq0b7c-g_PS/view?usp=drive_link"],
-      ["생보(교재/모의고사)", "https://drive.google.com/file/d/1rAuGAZGcC1e7pUFbtOnl8QFhsHz/view?usp=drive_link"],
-      ["변액(교재/모의고사)", "https://drive.google.com/file/d/1hfKSMkm0jlFwi9ttgpti3EP36k7x9BCI/view?usp=drive_link"],
-      ["보험연수원(등록교육, 보수교육)", "https://www.in.or.kr/"]
-    ],
-    topics: [
-      ["education-nonlife-test", "손보 교재와 모의고사 활용", "손해보험 모집자격 시험 준비에서 교재와 모의고사를 반복 학습하는 순서를 정리합니다."],
-      ["education-life-test", "생보 교재와 모의고사 활용", "생명보험 시험 범위와 자주 틀리는 계약 전 알릴 의무, 보험금 지급 기준을 정리합니다."],
-      ["education-variable-test", "변액보험 교재와 모의고사", "변액보험 시험에서 펀드, 위험, 설명의무를 함께 공부하는 기준을 설명합니다."],
-      ["education-institute", "보험연수원 등록교육 확인", "보험연수원에서 교육 이수 상태와 과정 신청을 확인하는 방법을 안내합니다."],
-      ["education-registration", "모집종사자 등록교육 체크", "신규 등록 전 이수해야 할 교육과 서류 준비 항목을 정리합니다."],
-      ["education-continuing", "보험 보수교육 일정 관리", "보수교육 대상자, 이수 기간, 미이수 시 업무 제한 가능성을 점검하는 흐름입니다."],
-      ["education-license", "설계사 자격시험 준비", "시험 전 과목별 학습 순서와 기출 유형을 업무 관점으로 정리합니다."],
-      ["education-agent-check", "모집종사자 조회 기준", "고객 응대 전 모집종사자 등록 상태를 확인해야 하는 이유를 설명합니다."],
-      ["education-compliance", "완전판매 교육 핵심", "상품 설명, 비교 안내, 고지의무 확인 등 완전판매 교육에서 중요한 실무 기준입니다."],
-      ["education-materials", "보험교육 자료 정리법", "교육자료, 모의고사, 이수증, 보수교육 기록을 체계적으로 보관하는 방법입니다."]
-    ]
-  }
-];
-
-const HOME_TOPICS = [
-  { slug: "child-insurance-standard-height-weight", category: "자녀보험", title: "자녀보험 표준 키·몸무게 확인 가이드", excerpt: "자녀보험 심사 전 표준 키와 몸무게 자료를 확인하고 고지사항을 정리하는 방법입니다.", linkLabel: "표준 키/몸무게(자녀보험)", linkUrl: "http://lee2229.hubweb.net/icon/adong.jpg" },
-  { slug: "medical-expense-underwriting-check", category: "실손보험", title: "실손보험 인수기준 확인 가이드", excerpt: "실손보험 가입 전 인수기준과 병력 고지, 보장 제한 가능성을 확인하는 순서입니다.", linkLabel: "실손보험 인수기준 확인", linkUrl: "https://kpub.knia.or.kr/productDisc/lostHealth/lostHealthDisclosure.do" },
-  { slug: "elevator-insurance-info-view", category: "승강기보험", title: "승강기 보험 정보 열람 가이드", excerpt: "승강기 정보 열람 자료를 기준으로 의무보험과 관리 주체를 확인하는 방법입니다.", linkLabel: "승강기 정보 열람", linkUrl: "https://www.elevator.go.kr/opn/MainPage.do" },
-  { slug: "ga-essential-links-guide", category: "GA 필수 링크", title: "GA 필수 링크 업무 가이드", excerpt: "대리점 협회 상품 비교와 보험사별 등기우편 접수 주소를 업무에 활용하는 기준입니다.", linkLabel: "대리점 협회 상품 비교", linkUrl: "https://pcs.iaa.or.kr/comm/login.do;jsessionid=357FB2FFF6457E9A77A9080571C407B3", extraLinks: [["보험사별 등기우편 접수 주소", "http://lee2229.hubweb.net/mail3.htm"]] }
-];
-
-const ARTICLES = [
-  ...HOME_TOPICS.map((item) => ({ ...item, type: "home", date: "2026-05-26" })),
-  ...CATEGORY_DEFS.flatMap((category) => category.topics.map(([slug, title, excerpt], index) => ({
-    slug,
-    title,
-    excerpt,
-    category: category.label,
-    categorySlug: category.slug,
-    linkLabel: category.links[index % category.links.length][0],
-    linkUrl: category.links[index % category.links.length][1],
-    date: "2026-05-26"
-  })))
-];
-
-const EDUCATION_CATEGORY = CATEGORY_DEFS.find((category) => category.slug === "education");
-const HOME_GUIDE_ARTICLES = ARTICLES.filter((article) => article.categorySlug !== "education");
+const ARTICLES = GUIDE_ARTICLES;
+const HOME_GUIDE_ARTICLES = GUIDE_ARTICLES;
 
 export default {
   async fetch(request, env) {
@@ -235,12 +124,6 @@ function handleRequest(request, env) {
   if (path === "/compare") return page("보험사 전산 링크 비교표", compareHtml("보험사 전산 링크 비교표", INSURERS), env, {
     description: "보험회사 전산, 브라우저, 고객센터, 인콜 모니터링, 전산 헬프데스크, 청구팩스, 약관확인, 청구서 링크를 표로 정리했습니다.",
     canonical: "/compare/"
-  });
-
-  const category = CATEGORY_DEFS.find((item) => path === `/category/${item.slug}`);
-  if (category && category.slug === "education") return page(category.title, categoryHtml(category), env, {
-    description: category.description,
-    canonical: `/category/${category.slug}/`
   });
 
   const articleMatch = path.match(/^\/articles\/([^/]+)$/);
@@ -306,16 +189,19 @@ function homeHtml(env) {
 }
 
 function downloadStripHtml() {
-  return `<section class="download-strip">${DOWNLOAD_LINKS.map(([label, url]) => `<div><span>※ ${esc(label)}</span><a href="${esc(url)}" target="_blank" rel="nofollow noopener">다운로드</a></div>`).join("")}</section>`;
+  const downloadLinks = GUIDE_ARTICLES.filter((article) => article.category === "치아보험").map((article) => [article.linkLabel, article.linkUrl]);
+  return `<section class="download-strip">${downloadLinks.map(([label, url]) => `<div><span>※ ${esc(label)}</span><a href="${esc(url)}" target="_blank" rel="nofollow noopener">다운로드</a></div>`).join("")}</section>`;
 }
 
 function homeLinkGroupsHtml() {
   const groups = [
-    ...CATEGORY_DEFS.map((category) => [category.label, category.links]),
-    ["자녀보험", [["표준 키/몸무게(자녀보험)", "http://lee2229.hubweb.net/icon/adong.jpg"]]],
-    ["실손보험", [["실손보험 인수기준 확인", "https://kpub.knia.or.kr/productDisc/lostHealth/lostHealthDisclosure.do"]]],
-    ["승강기보험", [["승강기 정보 열람", "https://www.elevator.go.kr/opn/MainPage.do"]]],
-    ["GA 필수 링크", [["대리점 협회 상품 비교", "https://pcs.iaa.or.kr/comm/login.do;jsessionid=357FB2FFF6457E9A77A9080571C407B3"], ["보험사별 등기우편 접수 주소", "http://lee2229.hubweb.net/mail3.htm"]]]
+    ["치아보험", GUIDE_ARTICLES.filter((article) => article.category === "치아보험").map((article) => [article.linkLabel, article.linkUrl])],
+    ["자동차 보험", GUIDE_ARTICLES.filter((article) => article.category === "자동차 보험").map((article) => [article.linkLabel, article.linkUrl])],
+    ["화재보험", GUIDE_ARTICLES.filter((article) => article.category === "화재보험").map((article) => [article.linkLabel, article.linkUrl])],
+    ["실손보험", GUIDE_ARTICLES.filter((article) => article.category === "실손보험").map((article) => [article.linkLabel, article.linkUrl])],
+    ["승강기보험", GUIDE_ARTICLES.filter((article) => article.category === "승강기보험").map((article) => [article.linkLabel, article.linkUrl])],
+    ["GA 필수 링크", GUIDE_ARTICLES.filter((article) => article.category === "GA 필수 링크").map((article) => [article.linkLabel, article.linkUrl])],
+    ["보험교육", GUIDE_ARTICLES.filter((article) => article.category === "보험교육").map((article) => [article.linkLabel, article.linkUrl])]
   ];
   return `<section class="link-groups">${groups.map(([title, links]) => `<div class="link-group"><h2>${esc(title)}</h2><div>${links.map(([label, href]) => `<a href="${esc(href)}" target="_blank" rel="nofollow noopener">${esc(label)}</a>`).join("")}</div></div>`).join("")}</section>`;
 }
@@ -399,7 +285,6 @@ function insurerRowHtml(item, index) {
 }
 
 function articleHtml(article) {
-  const relatedCategory = article.categorySlug === "education" ? EDUCATION_CATEGORY : null;
   const links = [[article.linkLabel, article.linkUrl], ...(article.extraLinks || [])].filter(([label, url]) => label && url);
   return `
     <article class="narrow article">
@@ -421,8 +306,8 @@ function articleHtml(article) {
       ${articleFaqHtml(article)}
       <section>
         <h2>함께 확인하면 좋은 자료</h2>
-        <p>${relatedCategory ? `${relatedCategory.label} 카테고리에는 이 글과 연결되는 교육 가이드가 함께 정리되어 있습니다.` : "홈에는 자동차 보험, 화재보험, 치아보험, 자녀보험, 실손보험, 승강기보험, GA 필수 링크 자료가 한 화면에 정리되어 있습니다."} 한 자료만 보고 판단하면 누락이 생길 수 있으므로 관련 가이드와 보험사 표를 같이 확인하는 방식이 좋습니다.</p>
-        <p><a class="text-link" href="${relatedCategory ? `/category/${relatedCategory.slug}/` : "/"}">${relatedCategory ? `${relatedCategory.label} 카테고리 보기` : "통합 홈 가이드 보기"}</a> · <a class="text-link" href="/compare/">보험사 전산 링크 비교표 보기</a></p>
+        <p>홈에는 자동차 보험, 화재보험, 치아보험, 실손보험, 승강기보험, GA 필수 링크, 보험교육 자료가 한 화면에 정리되어 있습니다. 한 자료만 보고 판단하면 누락이 생길 수 있으므로 관련 가이드와 보험사 표를 같이 확인하는 방식이 좋습니다.</p>
+        <p><a class="text-link" href="/">통합 홈 가이드 보기</a> · <a class="text-link" href="/compare/">보험사 전산 링크 비교표 보기</a></p>
       </section>
     </article>
   `;
@@ -444,25 +329,25 @@ function articleLongSections(article) {
 }
 
 function articleFocus(article) {
-  if (article.categorySlug === "auto") return {
+  if (article.category === "자동차 보험") return {
     reason: "자동차보험은 견적, 할인·할증, 운전자 범위, 과실비율, 결제 조건이 서로 연결되어 한 항목만 확인하면 판단이 흔들릴 수 있습니다.",
     prepare: "차량번호, 차종, 최초등록일, 운전자 범위, 사고 이력, 갱신 예정일, 원하는 담보와 특약",
     linkUse: "견적 비교, 사고 과실 확인, 할인·할증 원인 확인, 결제 조건 확인",
     miss: "운전자 한정 범위, 마일리지 특약, 블랙박스 특약, 대물 한도, 자기부담금"
   };
-  if (article.categorySlug === "fire") return {
+  if (article.category === "화재보험") return {
     reason: "화재보험은 건물 구조와 업종, 임대차 관계, 특수건물 여부에 따라 필요한 담보와 확인 자료가 달라집니다.",
     prepare: "사업장 주소, 건축물 용도, 면적, 구조, 업종, 재고 규모, 임대차 여부, 시설 소유 관계",
     linkUse: "사업장 체크리스트 확인, 특수건물 대상 여부 조회, 건축물대장 원자료 확인",
     miss: "건물과 시설 소유자 구분, 휴업손해, 시설소유자 배상책임, 재고 금액 변동"
   };
-  if (article.categorySlug === "dental") return {
+  if (article.category === "치아보험") return {
     reason: "치아보험은 치료 항목과 치료일, 치아 번호, 면책·감액기간에 따라 청구 가능 여부와 준비 서류가 달라집니다.",
     prepare: "치료일, 치아 번호, 치료명, 진료비 영수증, 진료비 세부내역서, 치과치료확인서, 영상자료 여부",
     linkUse: "손해보험 또는 생명보험 치아보험 청구양식 확인과 회사별 서류 차이 점검",
     miss: "면책기간, 감액기간, 보장개시일, 치료 전후 영상자료, 기존 질환 여부"
   };
-  if (article.categorySlug === "education") return {
+  if (article.category === "보험교육") return {
     reason: "보험교육은 시험 준비, 등록교육, 보수교육, 변액 자격처럼 목적별로 접속해야 하는 자료와 이수 기준이 다릅니다.",
     prepare: "교육 대상, 자격 종류, 시험 일정, 이수 기간, 소속 대리점 또는 회사, 필요한 교재와 모의고사",
     linkUse: "교재 확인, 모의고사 학습, 보험연수원 교육 신청과 이수 상태 확인",
@@ -529,9 +414,8 @@ function insurerHtml(item) {
 }
 
 function faqHtml(kind) {
-  const category = CATEGORY_DEFS.find((item) => item.slug === kind);
-  const faqs = category ? categoryFaqs(category) : homeFaqs();
-  const label = category ? category.label : "홈";
+  const faqs = homeFaqs();
+  const label = "홈";
   return `<section class="faq"><header class="block-header"><h2>자주 묻는 질문</h2><p>${esc(label)} 페이지에서 실제로 헷갈리기 쉬운 부분을 따로 정리했습니다.</p></header><div class="faq-list">${faqs.map(([q, a], index) => `<details ${index === 0 ? "open" : ""}><summary><span>Q.</span> ${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}</div></section>`;
 }
 
@@ -608,7 +492,6 @@ function page(title, body, env, options = {}) {
     <a class="brand" href="/">${esc(siteName(env))}</a>
     <nav>
       <a href="/">홈</a>
-      <a href="/category/education/">보험교육</a>
       <a href="/compare/">보험사 표</a>
     </nav>
   </header>
@@ -671,7 +554,6 @@ function sitemap(env) {
   const paths = [
     "/",
     "/compare/",
-    "/category/education/",
     ...ARTICLES.map((article) => `/articles/${article.slug}/`),
     ...INSURERS.map(([slug]) => `/company/${slug}/`),
     "/about/",
@@ -686,7 +568,6 @@ function sitemap(env) {
 function rss(env) {
   const base = siteUrl(env);
   const items = [
-    ["/category/education/", EDUCATION_CATEGORY.title, EDUCATION_CATEGORY.description],
     ...ARTICLES.map((article) => [`/articles/${article.slug}/`, article.title, article.excerpt])
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
