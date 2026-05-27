@@ -1,4 +1,7 @@
 const SITE_DEFAULT = "https://galaxymale.com";
+const ADSENSE_CLIENT = "ca-pub-3819299014015793";
+const ADSENSE_PUBLISHER = "pub-3819299014015793";
+const INDEXNOW_KEY = "8eccc22a4ac7105702c36804b6ac2ba9";
 
 const INSURERS = [
   ["samsung-fire", "삼성화재", "손해보험", "Chrome, Edge", "1588-5114", "1566-0553", "1899-5005", "0505-162-0872", ""],
@@ -156,8 +159,10 @@ function handleRequest(request, env) {
 
   if (path === "/favicon.ico" || path === "/favicon.svg") return text(faviconSvg(), "image/svg+xml; charset=utf-8", { "cache-control": "public, max-age=86400" });
   if (path === "/robots.txt") return text(robots(env), "text/plain; charset=utf-8");
+  if (path === "/ads.txt") return text(adsTxt(), "text/plain; charset=utf-8");
+  if (path === `/${INDEXNOW_KEY}.txt` || path === "/indexnow-key.txt") return text(INDEXNOW_KEY, "text/plain; charset=utf-8");
   if (path === "/sitemap.xml") return text(sitemap(env), "application/xml; charset=utf-8");
-  if (path === "/rss.xml") return text(rss(env), "application/rss+xml; charset=utf-8");
+  if (path === "/rss.xml" || path === "/rss" || path === "/feed") return text(rss(env), "application/rss+xml; charset=utf-8");
 
   if (path === "/" || path === "") return page("보험 업무 자료센터", homeHtml(env), env, {
     description: "보험사 전산, 고객센터, 청구팩스, 약관, 청구서, 자동차보험, 화재보험, 치아보험, 보험교육 자료를 정리한 보험 업무 자료센터입니다.",
@@ -1577,12 +1582,13 @@ function page(title, body, env, options = {}) {
   <link rel="canonical" href="${esc(canonical)}">
   <link rel="icon" href="/favicon.svg?v=20260526" type="image/svg+xml">
   <link rel="shortcut icon" href="/favicon.ico?v=20260526">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${esc(ADSENSE_CLIENT)}" crossorigin="anonymous"></script>
   <script type="application/ld+json">${JSON.stringify(structuredData(title, description, canonical, env, options.article)).replace(/</g, "\\u003c")}</script>
   <style>${css()}</style>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="/">${esc(siteName(env))}</a>
+    <a class="brand" href="/">${brandLogoSvg("small")}<span><strong>${esc(siteName(env))}</strong><em>보험업무자료실</em></span></a>
     <nav>
       <a href="/">홈</a>
       <a href="/claim-checklist/">청구 체크리스트</a>
@@ -1599,17 +1605,30 @@ function page(title, body, env, options = {}) {
 }
 
 function footer(env) {
+  const brand = siteName(env);
   return `
     <footer class="site-footer">
       <div class="footer-inner">
-        <div><strong>${esc(siteName(env))}</strong><p>보험 업무 자료를 표와 가이드 글로 정리하는 독립 정보 사이트입니다. 공식 접수 전에는 각 보험회사와 기관의 최신 안내를 확인해 주세요.</p></div>
+        <div class="footer-brand-row">
+          <a class="footer-brand" href="/">${brandLogoSvg("large")}<span><strong>${esc(brand)}</strong><em>보험업무자료실</em></span></a>
+        </div>
         <nav class="footer-links" aria-label="독립 페이지">
           <a href="/about/">소개</a>
-          <a href="/contact/">문의</a>
+          <a href="/contact/">문의 및 제보</a>
           <a href="/privacy/">개인정보처리방침</a>
           <a href="/terms/">이용약관</a>
-          <a href="/rss.xml">RSS</a>
         </nav>
+        <div class="footer-meta">
+          <span>주소 : 경기도 안산시 단원구 광덕서로 86</span>
+          <span>대표전화 : 0507-1494-6006</span>
+          <span>제호 : ${esc(brand)}</span>
+          <span>등록번호 : 경기, 아58291</span>
+          <span>등록일 : 2026-05-27</span>
+          <span>발행·편집인 : 한지우</span>
+          <span>청소년보호책임자 : 한지우</span>
+          <span>문의 : ${esc(siteEmail(env))}</span>
+        </div>
+        <p class="footer-copy">Copyright © 2026 ${esc(brand)}. All rights reserved.</p>
       </div>
     </footer>
   `;
@@ -1619,11 +1638,11 @@ function css() {
   return `
     :root{--bg:#f5f7fa;--paper:#fff;--line:#d9e1ec;--text:#172033;--muted:#637083;--accent:#e6004f;--blue:#174ea6}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans KR",sans-serif;line-height:1.72;letter-spacing:0}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
-    .site-header{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1180px)/2))}.brand{font-weight:900;color:#111827;font-size:20px}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{color:#26364d;font-weight:800;font-size:14px}
+    .site-header{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1180px)/2))}.brand{display:inline-flex;align-items:center;gap:10px;color:#111827;text-decoration:none}.brand:hover{text-decoration:none}.brand svg{width:36px;height:36px;flex:0 0 auto}.brand span{display:grid;line-height:1.12}.brand strong{font-size:20px;font-weight:900}.brand em{font-style:normal;font-size:12px;color:#64748b;font-weight:800}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{color:#26364d;font-weight:800;font-size:14px}
     main{max-width:1180px;margin:0 auto;padding:30px 18px 64px}.hero{background:#fff;border:1px solid var(--line);padding:34px;margin-bottom:16px}.eyebrow{margin:0 0 8px;color:var(--accent);font-weight:900}.hero h1,.narrow h1{margin:0 0 12px;font-size:36px;line-height:1.25;color:#111827}.hero p,.lead{font-size:18px;color:#334155;margin:0;word-break:keep-all}.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.primary-btn,.secondary-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 17px;border-radius:4px;font-weight:900}.primary-btn{background:#1d5fd1;color:#fff}.secondary-btn{background:#fff;color:#1e3a8a;border:1px solid #c7d7f5}.download-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 18px}.download-strip div{background:#fff;border-bottom:2px solid var(--accent);display:flex;align-items:center;justify-content:center;gap:14px;min-height:58px}.download-strip a{border:1px solid var(--accent);color:var(--accent);padding:9px 18px;font-weight:900}.link-groups{background:#fff;border:1px solid var(--line);padding:22px;margin-bottom:18px}.link-group{margin:0 0 26px}.link-group:last-child{margin-bottom:0}.link-group h2{font-size:25px;color:#72777d;margin:0 0 8px}.link-group div{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 24px}.link-group a,.pill-links a{display:flex;align-items:center;justify-content:center;min-height:28px;border:1px solid #cfd8e3;border-radius:999px;color:#344054;font-size:14px;background:#fff}.link-group a:hover,.pill-links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
     .table-section,.content-block,.narrow{background:#fff;border:1px solid var(--line);padding:24px;margin-top:18px}.narrow{max-width:920px;margin-left:auto;margin-right:auto}.narrow.wide{max-width:1180px}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:16px}.section-head h2,.block-header h2,.content-block h2,.narrow h2{margin:0;color:#111827}.section-head p,.block-header p{margin:0;color:var(--muted);max-width:640px}.table-wrap{overflow:auto;border:1px solid var(--line)}.data-table{width:100%;min-width:1080px;border-collapse:collapse;background:#fff}.data-table th{background:#fafafa;color:#111827;border-bottom:2px solid var(--accent);padding:9px 8px;text-align:center;white-space:nowrap}.data-table td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}.data-table td:first-child,.data-table th:first-child{border-left:0}.data-table tr.shaded td{background:#fafafa}.data-table a:not(.hand-link):not(.company-link):not(.system-link):not(.extra-link){pointer-events:none;color:#111827!important;text-decoration:none!important;cursor:default}.company{display:block;color:#111827;font-weight:900}.company-link:hover{text-decoration:underline}.system-link{display:block;font-size:12px;color:#64748b;margin-top:2px}.system-link:hover,.extra-link:hover{color:var(--blue);text-decoration:underline}.small-link{display:block;font-size:12px;color:#64748b}.table-phone{color:#111827;font-weight:500;cursor:default}.table-note{color:#475569;font-size:13px}.browser-icons{display:inline-flex;gap:4px}.browser-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;font-weight:900}.browser-icon.chrome{background:#1a73e8}.browser-icon.edge{background:#16a3a8}.hand-link{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;color:#111827;font-size:25px;line-height:1;border-radius:50%}.hand-link:hover{background:#f1f5f9;text-decoration:none}.extra-link{display:block;font-size:12px;color:#64748b;margin-top:2px}
     .topics{padding:28px 0}.topics.in-page{padding-bottom:10px}.block-header{margin-bottom:16px}.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px;color:var(--text);min-height:220px}.guide-card:hover{border-color:#8fb2e8;text-decoration:none}.guide-card span{font-size:13px;color:var(--accent);font-weight:900}.guide-card h2{font-size:19px;line-height:1.35;margin:8px 0;color:#111827}.guide-card p{margin:0;color:var(--muted);font-size:15px}.card-meta{display:flex;justify-content:space-between;margin-top:13px;color:#8b95a3;font-size:13px}.card-meta em{font-style:normal}.pill-links,.article-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.article-links a{display:flex;align-items:center;justify-content:center;border:1px solid var(--accent);color:var(--accent);min-height:42px;font-weight:900}.content-block.flush{margin:10px 0 20px}.faq{padding:26px 0}.faq-list{border-top:1px solid var(--line);background:#fff}.faq-list details,.article-faq details{border-bottom:1px solid var(--line);padding:0 6px}.faq-list summary,.article-faq summary{cursor:pointer;padding:15px 8px;font-weight:900;color:#111827}.faq-list summary span{color:#1e6bf0}.faq-list p,.article-faq p{margin:0;padding:0 8px 15px 24px;color:var(--muted)}.article-meta{font-size:14px!important;color:#64748b!important}.article h2{margin-top:34px}.article h3{font-size:18px;margin:24px 0 8px;color:#111827}.article-summary{border:1px solid #c7d2fe;background:#f8fbff;padding:18px 20px;margin:22px 0}.article-summary h2{margin-top:0}.article-summary ul,.final-checklist ul{margin:10px 0 0;padding-left:22px}.article-summary li,.final-checklist li{margin:7px 0}.mini-table-wrap{overflow:auto;margin:20px 0;border-top:1px solid var(--line)}.mini-table{width:100%;border-collapse:collapse;min-width:760px}.mini-table th{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-weight:900;color:#111827}.mini-table td{padding:18px 16px;vertical-align:top;border-bottom:1px solid var(--line)}.mini-table td:first-child{font-weight:900;color:#111827}.final-checklist{border-top:2px solid var(--accent);padding-top:18px;margin-top:28px}.article-checklist{border:1px solid #bfdbfe;background:#f8fbff;padding:18px;margin:22px 0}.article-checklist h2{margin-top:0}.info-list{border:1px solid var(--line);margin:22px 0}.info-list div{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line)}.info-list div:first-child{border-top:0}.info-list dt{background:#fafafa;padding:12px 14px;font-weight:900}.info-list dd{margin:0;padding:12px 14px}.text-link{font-weight:900;color:#a8003f}
-    .site-footer{background:#eef2f7;border-top:1px solid var(--line);padding:30px 18px}.footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:30px}.footer-inner p{margin:8px 0 0;color:#526173}.footer-links{display:grid;gap:8px;min-width:170px}.footer-links a{font-size:18px;color:#16304f}
+    .site-footer{background:#2b2b2b;color:#d6d6d6;border-top:0;padding:56px 18px 38px}.footer-inner{max-width:1180px;margin:0 auto}.footer-brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px}.footer-brand{display:inline-flex;align-items:center;gap:18px;color:#fff;text-decoration:none}.footer-brand:hover{text-decoration:none}.footer-brand svg{width:64px;height:64px;flex:0 0 auto}.footer-brand span{display:grid;line-height:1.1}.footer-brand strong{font-size:38px;font-weight:900;letter-spacing:0}.footer-brand em{font-style:normal;font-size:15px;color:#cfd8e3;font-weight:900}.footer-links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:24px}.footer-links a{color:#f2f2f2;font-size:15px;font-weight:900}.footer-links a+a{position:relative}.footer-links a+a:before{content:"";position:absolute;left:-10px;top:50%;width:1px;height:14px;background:#777;transform:translateY(-50%)}.footer-meta{display:flex;gap:18px 28px;flex-wrap:wrap;color:#c7c7c7;font-size:15px}.footer-copy{margin:24px 0 0;color:#bdbdbd;font-size:15px}
     @media(max-width:880px){.site-header{padding:14px 18px;align-items:flex-start;flex-direction:column}.hero h1,.narrow h1{font-size:28px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links{grid-template-columns:1fr 1fr}.section-head{display:block}.footer-inner{display:block}.footer-links{margin-top:18px}.info-list div{grid-template-columns:1fr}.info-list dt{border-bottom:1px solid var(--line)}}
     @media(max-width:540px){main{padding:20px 12px 44px}.hero,.table-section,.content-block,.narrow,.link-groups{padding:18px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links{grid-template-columns:1fr}.download-strip div{justify-content:space-between;padding:10px}.data-table th,.data-table td{font-size:14px;padding:7px 6px}}
   `;
@@ -1679,7 +1698,12 @@ function rss(env) {
 }
 
 function robots(env) {
-  return `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl(env)}sitemap.xml\n`;
+  const base = siteUrl(env);
+  return `User-agent: *\nAllow: /\n\nUser-agent: Yeti\nAllow: /\n\nSitemap: ${base}sitemap.xml\n`;
+}
+
+function adsTxt() {
+  return `google.com, ${ADSENSE_PUBLISHER}, DIRECT, f08c47fec0942fa0\n`;
 }
 
 function phoneLink(value) {
@@ -1717,15 +1741,35 @@ function siteUrl(env) {
 }
 
 function siteName(env) {
-  return env && env.SITE_NAME ? String(env.SITE_NAME) : "보험업무 자료센터";
+  return "galaxymale";
 }
 
 function siteEmail(env) {
   return env && env.CONTACT_EMAIL ? String(env.CONTACT_EMAIL) : "contact@galaxymale.com";
 }
 
+function brandLogoSvg(size = "small") {
+  const labelled = size === "large" ? "galaxymale logo" : "";
+  return `<svg class="brand-logo" viewBox="0 0 96 96" role="img" aria-label="${labelled}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gm-core" x1="18" y1="14" x2="80" y2="84" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#7dd3fc"/>
+        <stop offset="0.45" stop-color="#2563eb"/>
+        <stop offset="1" stop-color="#e6004f"/>
+      </linearGradient>
+    </defs>
+    <rect x="6" y="6" width="84" height="84" rx="24" fill="#111827"/>
+    <path d="M48 17c13 0 24 7 29 18-8-5-19-8-31-8-12 0-23 3-31 8 5-11 17-18 33-18Z" fill="url(#gm-core)" opacity=".9"/>
+    <path d="M28 35c12-12 34-13 48-2 5 4 7 8 6 11-2 7-18 8-36 2-17-5-30-14-28-20 1-3 5-5 10-6" fill="none" stroke="#dbeafe" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+    <path d="M50 35l18 7v14c0 13-8 22-18 25-10-3-18-12-18-25V42l18-7Z" fill="#fff"/>
+    <path d="M50 43l10 4v9c0 8-4 13-10 16-6-3-10-8-10-16v-9l10-4Z" fill="url(#gm-core)"/>
+    <path d="M46 56h13v6H41V48h18v6H46v2Z" fill="#fff"/>
+    <circle cx="75" cy="32" r="5" fill="#fff"/>
+  </svg>`;
+}
+
 function faviconSvg() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="20" fill="#12315a"/><path d="M20 30h56v12H20zM20 48h56v12H20zM20 66h38v12H20z" fill="#fff"/><circle cx="70" cy="72" r="10" fill="#e6004f"/></svg>`;
+  return brandLogoSvg("small");
 }
 
 function esc(value) {
