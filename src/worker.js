@@ -79,7 +79,7 @@ const EXTERNAL_LINKS = {
   "aia-life": { system: "https://imap.aia.co.kr", terms: "https://www.aia.co.kr/ko/our-products.html", claim: "https://drive.google.com/file/d/1QQ2sU3-WhjRyN2HI9xwh-kj6HVxWfcUg/view?usp=sharing" },
   "mg": { system: "https://insure.kfcc.co.kr/", terms: "https://insu.kfcc.co.kr/ino/inoGuide.do", claim: "http://xn--989an19aika.com/pdf/새마을금고.pdf" },
   "the-k": { system: "https://www.ktcu.or.kr/MH/MH-P010M01.do", terms: "https://www.ktcu.or.kr/IS/IS-P170M01.do", claim: "http://xn--989an19aika.com/pdf/교직원공제회.pdf" },
-  "post-office": { system: "https://epostlife.go.kr/LNLNDM10DM.do", terms: "https://mall.epostbank.go.kr/IPPSKE0000.do", claim: "https://epostlife.go.kr/cms/docimg/i-board/form/2023/02/20230221.pdf" },
+  "post-office": { system: "https://epostlife.go.kr/LNLNDM10DM.do", terms: "https://epostlife.go.kr/", claim: "https://epostlife.go.kr/cms/docimg/i-board/form/2023/02/20230221.pdf" },
   "suhyup": { system: "https://www.suhyup-bank.com/", claim: "https://psmb.suhyup-bank.com/smart/page/dhp/cmn/dhp100200j.jsp?filePathNm=../DIGITALPDF/ins_dmnd.pdf" },
   "cu": { system: "https://openbank.cu.co.kr/?sub=6000", terms: "https://openbank.cu.co.kr/?sub=6000", claim: "http://xn--989an19aika.com/pdf/신협.pdf" }
 };
@@ -351,7 +351,7 @@ function insurerRowHtml(item, index) {
   const links = EXTERNAL_LINKS[slug] || {};
   return `
     <tr${index % 2 ? " class=\"shaded\"" : ""}>
-      <td><span class="company">${esc(name)}</span></td>
+      <td><span class="company">${esc(name)}</span>${links.system ? `<a class="system-link" href="${esc(links.system)}" rel="nofollow noopener" target="_blank">전산 바로가기</a>` : ""}</td>
       <td>${esc(type)}</td>
       <td>${browserIcons(browser)}</td>
       <td>${phoneLink(center)}</td>
@@ -524,11 +524,22 @@ function articleHtml(article) {
       ${articleStepGuideHtml(article)}
       <section class="article-faq">
         <h2>${esc(copy.faqTitle || "자주 묻는 질문")}</h2>
-        ${copy.faqs.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}
+        ${articleFaqItems(article, copy).map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("")}
       </section>
       ${articleFinalChecklistHtml(article)}
     </article>
   `;
+}
+
+function articleFaqItems(article, copy) {
+  const focus = articleFocus(article);
+  const base = copy.faqs || [];
+  const extras = [
+    [`${article.title}을 실제 업무에서 사용할 때 가장 먼저 확인할 기준은 무엇인가요?`, `먼저 ${focus.prepare}를 정리한 뒤 외부 링크를 열어야 합니다. 기준 정보가 없으면 같은 자료를 여러 번 확인하게 되고, 고객센터에 문의해도 답변이 일반론으로 돌아올 가능성이 큽니다. 특히 보험 업무는 기준일, 계약자와 피보험자, 사고 또는 치료 내용, 가입 시점의 약관이 서로 맞아야 하므로 자료를 보기 전에 현재 상황을 짧게 정리해 두는 것이 가장 중요합니다.`],
+    [`외부 링크가 열리는데도 다시 공식 확인이 필요한 이유는 무엇인가요?`, `보험회사와 기관 사이트는 화면이 열리는 것과 실제 접수 기준이 맞는 것이 별개일 수 있습니다. 링크는 ${focus.linkUse}에 도움이 되지만, 양식 개정일, 제출 대상, 로그인 권한, 파일 버전, 공지 변경에 따라 실제 처리 기준이 달라질 수 있습니다. 따라서 링크가 정상이어도 접수 직전에는 해당 보험회사나 기관의 최신 공지, 고객센터 안내, 약관 공시 기준을 한 번 더 확인하는 편이 안전합니다.`],
+    [`이 글의 내용을 기록으로 남긴다면 무엇을 적어야 하나요?`, `확인일, 접속한 링크, 조회 조건, 안내받은 고객센터 답변, 제출 또는 다운로드한 파일명을 남기는 것이 좋습니다. 나중에 링크가 바뀌거나 파일이 교체되면 현재 화면만 보고는 당시 기준을 알기 어렵습니다. 간단한 메모라도 남겨두면 보완 요청, 재청구, 가입 전 재검토, 교육 이수 확인처럼 시간이 지난 뒤 다시 확인해야 하는 상황에서 판단 근거가 됩니다.`]
+  ];
+  return [...base, ...extras];
 }
 
 function articleStructuredSectionsHtml(article, copy) {
@@ -543,7 +554,11 @@ function articleStructuredSectionsHtml(article, copy) {
 
 function articleSectionAdditions(article, index) {
   const additions = ARTICLE_SECTION_ADDITIONS[article.slug];
-  return additions && additions[index] ? additions[index] : [];
+  const deepening = ARTICLE_SECTION_DEEPENING[article.slug];
+  return [
+    ...(additions && additions[index] ? additions[index] : []),
+    ...(deepening && deepening[index] ? deepening[index] : [])
+  ];
 }
 
 function articleProblemTableHtml(article) {
@@ -656,6 +671,137 @@ const UNIQUE_ARTICLE_COPY = {
       ["치료가 끝나기 전에 먼저 청구해도 되나요?", "치료 항목에 따라 다릅니다. 완료일이 필요한 보철치료는 치료 종료 후 서류가 완성되는 경우가 많으므로 보험사에 접수 가능 시점을 먼저 문의하는 것이 좋습니다."]
     ]
   }
+};
+
+const ARTICLE_SECTION_DEEPENING = {
+  "dental-nonlife-forms": [
+    ["실제 청구에서는 양식 이름보다 청구하려는 치료 항목과 증빙의 연결이 더 중요합니다. 임플란트, 크라운, 충전, 발치처럼 치료 성격이 다른 항목을 한 번에 청구할 때는 각 치아별 치료일, 치료명, 본인부담금이 한눈에 맞아야 합니다. 손해보험사는 실손 또는 특약 기준으로 서류를 보는 경우가 많으므로 진료비 세부산정내역서의 항목명이 보험 약관의 보장 항목과 어떻게 대응되는지 먼저 확인하면 보완 요청을 줄일 수 있습니다."],
+    ["치과에서 받은 서류가 보험사 양식과 완전히 같지 않아도 바로 다시 방문할 필요는 없습니다. 다만 진단명, 치료 치아 번호, 치료 시작일과 종료일, 의사 확인란이 빠져 있으면 접수 후 심사 단계에서 멈출 수 있습니다. 병원에 요청할 때는 보험금 청구용이라고만 말하기보다 치아보험 제출용이며 치아 번호와 치료 내용을 기재해 달라고 구체적으로 요청하는 편이 안전합니다."],
+    ["영수증만 있으면 충분하다고 생각하기 쉽지만, 손해보험 치아 청구는 결제 사실과 치료 사실을 따로 봅니다. 카드 영수증은 결제 증빙이고, 진료비 계산서와 세부내역서는 실제 의료 행위를 설명합니다. 두 자료의 날짜가 다르거나 금액이 나뉘어 있으면 일부 누락으로 오해될 수 있으므로 접수 전에는 총액, 본인부담금, 비급여 항목 표시가 서로 맞는지 대조해야 합니다."],
+    ["보철치료는 치료 기간이 길어 중간 접수와 최종 접수가 섞이기 쉽습니다. 임시치아, 본뜨기, 최종 장착일이 모두 같은 치료 과정에 속하더라도 보험사는 보장 기준일을 특정해야 하므로 완료일 기준 자료가 필요할 수 있습니다. 접수 전 치료가 끝난 항목과 아직 진행 중인 항목을 나누어 표시하면 지급 지연이나 중복 보완을 줄일 수 있습니다."],
+    ["마지막 확인은 제출 버튼을 누르는 순간이 아니라 접수번호가 나온 뒤까지 이어져야 합니다. 모바일 앱으로 제출했다면 파일명이 흐릿하게 올라가지 않았는지, 여러 장 사진이 순서대로 첨부됐는지, 계좌 예금주가 계약자 또는 수익자 정보와 맞는지 확인해야 합니다. 이 단계에서 틀린 부분을 발견하면 새 청구를 만드는 것보다 기존 접수 건에 보완하는 편이 처리 흐름이 안정적입니다."]
+  ],
+  "dental-life-forms": [
+    ["생명보험 치아특약은 손해보험 청구와 달리 특약의 가입 시점, 면책기간, 감액기간을 더 꼼꼼히 보는 편입니다. 같은 충치 치료라도 가입 전 이미 진단받은 치아인지, 가입 후 새로 치료가 시작된 치아인지에 따라 판단이 달라질 수 있습니다. 따라서 양식을 찾기 전에 증권의 치아특약명과 보장개시일을 먼저 적어 두면 청구 가능성을 훨씬 정확하게 볼 수 있습니다."],
+    ["수익자와 피보험자가 다른 계약은 서명 위치가 헷갈리기 쉽습니다. 특히 가족이 대신 접수하는 경우에는 위임장, 신분 확인, 가족관계 확인이 추가될 수 있으므로 보험사 청구서의 서명란을 계약자 기준으로만 작성하면 안 됩니다. 접수 전에는 누가 치료를 받았고, 누가 보험금을 받을 사람인지, 누가 대리 제출하는지를 세 칸으로 나누어 확인하는 것이 좋습니다."],
+    ["생명보험사는 치료 완료 여부를 지급 판단의 기준으로 삼는 경우가 많습니다. 치료 계획만 있거나 임시 보철 단계라면 접수는 가능해도 추가 확인이 이어질 수 있습니다. 치과에서 발급받는 확인서에는 최종 장착일, 치료 부위, 치료 종류가 들어가야 하고, 장기간 치료라면 중간 납입 영수증과 최종 완료 서류를 분리해서 보관하는 편이 깔끔합니다."],
+    ["모바일 접수는 빠르지만 사진 품질 때문에 보완이 자주 발생합니다. 청구서, 진단서 또는 치료확인서, 진료비 계산서, 세부내역서를 한 장씩 평평하게 놓고 촬영해야 하며, 문서 모서리와 병원 직인이 잘리지 않아야 합니다. 파일을 여러 장 올릴 때는 치료확인서가 먼저 보이게 정리하면 심사자가 청구 내용을 파악하기 쉽습니다."],
+    ["지급 결과를 확인할 때는 지급액만 보지 말고 어떤 항목이 인정되었고 어떤 항목이 제외되었는지 읽어야 합니다. 같은 치아라도 보철, 보존, 발치의 보장 기준이 다르고, 약관상 횟수 제한이 남아 있는지도 다음 청구에 영향을 줍니다. 결과 통지서를 보관해 두면 이후 치과 치료를 받을 때 청구 가능성을 미리 판단하는 근거가 됩니다."]
+  ],
+  "auto-face-quote": [
+    ["대면 간편견적은 빠르게 대략 보험료를 보는 도구가 아니라, 내 운전 조건을 설명하고 오입력을 줄이는 과정입니다. 차량번호, 운전자 범위, 연령 한정, 블랙박스나 첨단안전장치 장착 여부가 조금만 달라도 보험료가 달라집니다. 상담 전에 차량등록증과 기존 증권을 함께 준비하면 상담자가 추정값 대신 실제 기준으로 견적을 산출할 수 있습니다."],
+    ["차량 정보는 모델명보다 세부 트림과 최초등록일이 중요할 때가 많습니다. 같은 차종이라도 배기량, 연식, 옵션, 출고가가 다르면 자기차량손해 기준금액과 특약 적용 가능성이 달라집니다. 보험료를 비교할 때는 상담자가 입력한 차량 정보 화면을 한 번 보여 달라고 요청해 실제 차량과 일치하는지 확인하는 것이 좋습니다."],
+    ["가장 낮은 보험료만 고르면 사고 때 필요한 담보가 빠져 있을 수 있습니다. 대물 한도, 자기신체사고와 자동차상해 선택, 긴급출동, 무보험차상해, 자기차량손해의 자기부담금은 견적서에서 반드시 따로 봐야 합니다. 금액이 낮아진 이유가 할인 때문인지 담보 축소 때문인지 구분해야 실제 비교가 됩니다."],
+    ["결제 직전에는 보장 시작일과 운전자 범위를 다시 확인해야 합니다. 차량 인도일, 기존 보험 만기일, 가족 추가 운전 여부가 어긋나면 하루 공백이나 무보험 운전 문제가 생길 수 있습니다. 특히 카드 무이자나 포인트 혜택은 결제 조건일 뿐 보장 내용이 아니므로, 최종 선택은 결제 혜택보다 증권 조건을 기준으로 해야 합니다."]
+  ],
+  "auto-premium-factor": [
+    ["보험료가 오른 이유는 한 가지 원인으로 설명되지 않는 경우가 많습니다. 사고 이력, 법규 위반, 운전자 범위 변경, 차량가액 변동, 물가와 정비수가 반영이 동시에 작용할 수 있습니다. 갱신 안내문을 볼 때는 작년 담보와 올해 담보를 같은 조건으로 놓고 비교해야 실제 인상 원인이 보입니다."],
+    ["사고 건수는 단순히 사고가 있었는지보다 처리 방식과 평가 기간이 중요합니다. 소액 사고라도 보험 처리 여부에 따라 할인할증 등급에 반영될 수 있고, 과실 비율이나 피해 규모에 따라 갱신 보험료에 미치는 영향이 달라집니다. 갱신 전에는 최근 3년 사고 처리 내역과 할인할증 등급 변화를 함께 확인해야 합니다."],
+    ["할인 특약은 가입만 했다고 계속 적용되는 것이 아닙니다. 마일리지, 블랙박스, 자녀 할인, 안전장치 할인처럼 증빙이나 갱신 시 재확인이 필요한 항목은 누락되기 쉽습니다. 보험료가 갑자기 올랐다면 담보를 줄이기 전에 적용되던 할인 특약이 빠졌는지 먼저 확인하는 것이 순서입니다."],
+    ["보험료 안내 화면의 설명 문구가 모호하면 최종 산출표를 기준으로 봐야 합니다. 일부 비교 화면은 예상 보험료를 먼저 보여 주고, 본인인증 후 실제 가입 가능 금액을 다시 계산합니다. 이 차이를 오류로만 보지 말고 어떤 정보가 추가 입력되면서 금액이 바뀌었는지 확인해야 불필요한 상담 반복을 줄일 수 있습니다."]
+  ],
+  "auto-fault-ratio": [
+    ["과실비율은 사고 직후 감정적인 진술보다 객관 자료의 배열로 결정되는 경우가 많습니다. 사고 장소, 차선, 신호, 속도, 충돌 부위, 정지 여부를 시간순으로 정리하면 보험사 담당자에게 같은 설명을 반복하지 않아도 됩니다. 현장 사진은 넓은 장면과 가까운 손상 부위를 나누어 찍어야 나중에 사고 흐름을 복원하기 쉽습니다."],
+    ["분쟁이 생겼을 때는 상대방의 주장에 바로 반박하기보다 기준표와 실제 상황의 차이를 확인해야 합니다. 동일한 유형의 사고라도 도로 구조, 선진입 여부, 방향지시등 사용, 제한속도 위반 여부에 따라 조정 요소가 붙습니다. 따라서 과실비율을 문의할 때는 단순히 억울하다고 말하기보다 어떤 조정 요소가 적용됐는지 물어보는 것이 효과적입니다."],
+    ["블랙박스가 있어도 필요한 장면이 빠져 있으면 결정적인 자료가 되기 어렵습니다. 사고 전후 몇 초, 신호등 위치, 차선 표시, 상대 차량의 움직임이 보이는지 확인해야 합니다. 원본 파일은 편집하지 말고 따로 보관하고, 보험사에는 필요한 구간만 복사해 제출하면 원본 훼손 문제를 피할 수 있습니다."],
+    ["최종 과실비율을 받아들일지 판단할 때는 수리비와 보험료 영향까지 같이 봐야 합니다. 과실이 조금 줄어도 실제 부담액 차이가 크지 않은 경우가 있고, 반대로 장기적으로 할인할증에 영향을 줄 수 있는 경우도 있습니다. 합의 전에는 자기부담금, 렌트비, 대물 처리 범위, 갱신 보험료 가능성을 함께 확인해야 합니다."]
+  ],
+  "fire-business-checklist": [
+    ["사업장 화재보험은 업종명 하나로 끝나지 않습니다. 실제 영업 방식, 보관 물품, 조리나 용접 같은 화기 사용 여부, 야간 무인 운영 여부가 위험 평가에 들어갑니다. 가입 전 체크리스트에는 사업자등록증 업태와 실제 현장의 차이를 적어 두어야 하며, 임대차 계약서의 용도와 건축물대장 용도도 함께 확인하는 것이 좋습니다."],
+    ["보험가액을 정할 때는 건물, 시설, 집기, 재고를 한 덩어리로 적으면 사고 때 입증이 어려워집니다. 인테리어 비용, 냉장고나 기계 장치, 판매용 재고, 원재료를 구분해 대략의 취득가와 현재 상태를 남겨야 합니다. 특히 계절 재고가 큰 업종은 평균 재고와 성수기 최대 재고가 다를 수 있으므로 별도로 기록해야 합니다."],
+    ["임차 사업장은 건물주 재산과 내 재산의 경계가 자주 문제 됩니다. 바닥, 천장, 간판, 배관, 냉난방 설비가 누구의 소유인지 계약서와 현장 기준으로 구분해야 합니다. 화재가 나면 내 손해뿐 아니라 원상복구, 배상책임, 영업 중단 손해가 동시에 생길 수 있어 담보를 분리해서 확인하는 것이 안전합니다."],
+    ["현장 점검은 서류를 채우는 절차가 아니라 사고 뒤 설명할 자료를 미리 만드는 과정입니다. 소화기 위치, 전기 분전함, 가스 밸브, 피난 통로, 적재 상태를 사진으로 남기면 추후 위험관리와 보험 심사 모두에 도움이 됩니다. 사진은 날짜가 보이게 보관하고, 공사나 업종 변경이 있을 때마다 새로 찍어야 합니다."]
+  ],
+  "fire-building-register": [
+    ["건축물대장은 화재보험에서 주소 확인 서류가 아니라 건물의 법적 성격을 보여 주는 기준 자료입니다. 용도, 구조, 층수, 연면적, 사용승인일이 보험사의 위험 평가에 들어가므로 실제 현장과 대장 내용이 다르면 먼저 차이를 파악해야 합니다. 특히 근린생활시설, 공장, 창고, 주택이 섞인 건물은 층별 용도를 나누어 보는 것이 중요합니다."],
+    ["대장상 용도와 실제 사용이 다르면 가입은 되더라도 사고 때 다툼이 생길 수 있습니다. 예를 들어 창고로 등록된 공간에서 제조 작업을 하거나, 사무실로 등록된 공간에서 음식 조리를 하면 위험이 달라집니다. 보험 상담 전에는 실제 사용 현황을 숨기지 말고 설명해야 적정 담보와 보험료를 산출할 수 있습니다."],
+    ["특수건물 여부는 일반 가입자가 직접 판단하기 어렵습니다. 일정 규모 이상이거나 다중이용 성격이 있는 건물은 별도 제도와 의무보험 검토가 필요할 수 있습니다. 건축물대장만 보고 단정하지 말고, 면적과 용도, 입점 업종을 기준으로 보험사나 관련 기관의 최신 안내를 확인하는 것이 좋습니다."],
+    ["건축물대장은 발급일이 오래되면 변경 이력을 놓칠 수 있습니다. 증축, 용도변경, 대수선, 소유자 변경이 있었는데 예전 출력본만 가지고 있으면 보험 가입 정보가 현실과 맞지 않을 수 있습니다. 실제 가입이나 갱신 때는 최신 발급본을 기준으로 하고, 현장 사진과 임대차 계약서까지 함께 비교하면 오류를 줄일 수 있습니다."]
+  ],
+  "education-institute": [
+    ["보험연수원 과정은 이름이 비슷해도 목적이 다릅니다. 등록교육은 업무를 시작하기 위한 기본 요건에 가깝고, 보수교육은 이미 활동 중인 사람이 자격 유지를 위해 챙겨야 하는 과정입니다. 먼저 본인이 신규 등록 대상인지, 갱신 또는 보수 대상인지 구분해야 잘못된 과정을 신청하는 일을 피할 수 있습니다."],
+    ["교재와 모의고사를 먼저 찾기보다 마감일과 수료 인정 기준을 먼저 확인해야 합니다. 온라인 과정은 진도율, 평가 응시, 최종 점수, 본인 인증이 모두 맞아야 수료로 인정될 수 있습니다. 시험 직전에 몰아서 듣는 방식은 인증 오류나 접속 문제에 취약하므로 여유 기간을 두고 진행하는 것이 안전합니다."],
+    ["수료 결과가 소속 회사나 등록 업무에 자동으로 반영되는지 확인해야 합니다. 개인 화면에서는 수료로 보이는데 제출 기관에서는 아직 확인되지 않는 경우가 있을 수 있습니다. 과정명, 수료일, 수료번호, 제출 대상 기관을 따로 적어 두면 추후 보완 요청이 와도 빠르게 대응할 수 있습니다."],
+    ["수료증 파일은 단순 보관용이 아니라 업무 이력 증빙입니다. 여러 과정을 이수했다면 파일명에 과정명과 날짜를 넣고, 회사 제출용과 개인 보관용을 나누어 두는 편이 좋습니다. 특히 등록교육과 보수교육이 반복되는 업무라면 다음 교육 기한을 캘린더에 함께 남겨야 누락을 줄일 수 있습니다."]
+  ],
+  "medical-expense-underwriting-check": [
+    ["실손보험 인수기준을 볼 때는 병명보다 최근 치료 흐름을 먼저 정리해야 합니다. 투약, 검사, 입원, 수술, 경과 관찰이 언제 시작되고 언제 끝났는지에 따라 심사 판단이 달라집니다. 같은 진단명이라도 완치 후 일정 기간이 지난 경우와 현재 치료 중인 경우는 전혀 다르게 볼 수 있습니다."],
+    ["기존 실손이 있는 사람은 새 가입 가능성보다 기존 계약 유지 여부를 먼저 확인해야 합니다. 전환, 해지 후 재가입, 중복 가입 제한처럼 보장 공백을 만들 수 있는 선택지가 있기 때문입니다. 상담 전에는 기존 증권의 보장개시일, 갱신 주기, 자기부담률, 현재 보험료를 적어 두어야 비교가 현실적입니다."],
+    ["조건부 인수는 거절과 다릅니다. 특정 부위 부담보, 할증, 기간 제한이 붙더라도 본인에게 필요한 보장이 남아 있는지 따져볼 수 있습니다. 다만 조건 문구가 모호하면 나중에 청구 때 오해가 생기므로 어떤 질병, 어떤 부위, 어떤 기간에 제한이 붙는지 반드시 문장 그대로 확인해야 합니다."],
+    ["가입 단계에서 빠뜨린 고지는 청구 단계에서 문제가 됩니다. 사소해 보이는 약 처방, 재검 안내, 검사 예약도 질문 범위에 들어가면 고지 대상일 수 있습니다. 판단이 애매한 기록은 숨기기보다 상담자에게 질문 형태로 남기고, 답변 받은 날짜와 내용을 메모해 두는 것이 안전합니다."]
+  ],
+  "elevator-insurance-info-view": [
+    ["승강기 정보는 건물 주소만으로 정확히 찾기 어려울 수 있습니다. 같은 건물 안에 여러 대가 있으면 승강기 번호, 설치 위치, 용도, 검사 유효기간을 각각 확인해야 합니다. 업무 기록에는 건물명보다 실제 관리하는 호기와 위치를 남겨야 사고나 점검 문의 때 혼선을 줄일 수 있습니다."],
+    ["관리 주체가 누구인지에 따라 보험과 안전관리 책임이 달라질 수 있습니다. 소유자, 관리사무소, 임차 운영자, 위탁 관리업체가 각각 다른 경우에는 계약서와 관리 규약을 함께 봐야 합니다. 책임 소재가 애매한 상태에서 보험만 가입하면 사고 뒤 서류 제출과 비용 부담에서 분쟁이 생길 수 있습니다."],
+    ["검사 이력은 안전 상태를 보증하는 문서라기보다 현재 관리 흐름을 보여 주는 자료입니다. 최근 지적 사항, 보완 완료 여부, 다음 검사 예정일을 확인하면 보험 상담 때 위험 요인을 설명하기 쉽습니다. 오래된 장비나 이용량이 많은 건물은 유지보수 계약 내용도 함께 확인해야 합니다."],
+    ["승강기 관련 자료는 건물 관리 파일 안에서 쉽게 섞입니다. 보험 증권, 검사 확인서, 유지보수 계약서, 사고 보고 기록을 같은 폴더에 두되 파일명을 날짜순으로 정리하면 좋습니다. 실제 사고가 발생하면 몇 년 전 자료보다 최신 검사와 보완 조치 기록이 먼저 필요합니다."]
+  ],
+  "ga-product-compare": [
+    ["대리점 협회 상품 비교는 보험료 순위를 보는 화면이 아니라 조건을 맞춰 비교하는 출발점입니다. 납입기간, 보장기간, 갱신 여부, 가입금액이 다르면 같은 상품군이라도 비교 의미가 사라집니다. 먼저 본인이 비교하려는 목적을 보험료 절감인지, 보장 공백 보완인지, 기존 계약 점검인지 정해야 합니다."],
+    ["제외 조건과 지급 제한은 작은 글씨로 보이지만 실제 청구 때 가장 큰 차이를 만듭니다. 보장금액이 높아도 면책기간, 감액기간, 특정 질병 제외, 횟수 제한이 있으면 체감 보장이 줄어듭니다. 비교표를 볼 때는 보험료 열보다 보장하지 않는 경우와 감액되는 경우를 먼저 표시해 두는 편이 좋습니다."],
+    ["고객 설명 의무는 상담자가 상품을 많이 설명했다는 뜻이 아닙니다. 가입자가 이해해야 할 핵심 조건을 알기 쉬운 문장으로 확인했다는 의미에 가깝습니다. 비교 과정에서 이해하지 못한 용어가 있으면 바로 질문하고, 답변을 견적서나 상담 메모와 함께 남겨야 나중에 같은 내용을 다시 확인할 수 있습니다."],
+    ["최종 판단은 비교 사이트 화면이 아니라 청약서와 약관에서 해야 합니다. 비교 화면은 후보를 좁히는 데 유용하지만, 실제 가입 가능 여부와 특약 구성은 심사와 청약 단계에서 달라질 수 있습니다. 따라서 비교 결과를 저장한 뒤 최종 설계서의 담보명, 보험료, 납입기간이 같은지 대조해야 합니다."]
+  ],
+  "insurance-before-join-documents": [
+    ["보험 가입 전 준비물은 서류를 많이 모으는 일이 아니라 상담의 방향을 정하는 일입니다. 기존 보험, 가족 구성, 월 예산, 최근 병원 이용, 앞으로 걱정되는 위험을 한 장에 정리하면 상담자가 불필요한 상품을 권하기 어렵습니다. 이 메모는 추천을 받기 위한 자료이면서 동시에 나중에 왜 그 상품을 선택했는지 설명해 주는 기록이 됩니다."],
+    ["기존 증권은 사진으로만 저장하면 비교가 어렵습니다. 상품명, 보험기간, 납입기간, 주요 담보, 보험료, 갱신 여부를 표처럼 적어야 중복과 공백이 보입니다. 특히 실손, 진단비, 수술비, 배상책임처럼 성격이 다른 보장은 이름이 비슷해도 역할이 다르므로 담보 기능별로 나누어 정리해야 합니다."],
+    ["가족 정보를 준비할 때는 필요한 범위만 다루는 것이 좋습니다. 나이, 직업, 부양 관계, 기존 보험 여부 정도면 초기 상담에는 충분한 경우가 많습니다. 주민등록번호 전체, 상세 병력, 민감한 서류는 실제 청약이나 심사 단계에서 공식 절차에 따라 제출하는 편이 개인정보 보호 측면에서 안전합니다."],
+    ["예산은 낮게 적는 것보다 유지 가능한 금액을 정하는 것이 중요합니다. 보험은 한두 달 내고 끝나는 지출이 아니므로 소득 변화, 대출, 교육비, 생활비와 함께 봐야 합니다. 상담 전 월 납입 상한과 절대 줄이면 안 되는 보장을 따로 적어 두면 보험료에 맞춰 무리하게 담보를 깎는 일을 줄일 수 있습니다."]
+  ],
+  "insurance-health-disclosure-guide": [
+    ["고지의무는 기억력 테스트가 아니라 질문 범위에 들어오는 사실을 기록으로 확인하는 과정입니다. 병원 방문 날짜, 검사명, 처방 여부, 진단명, 치료 종료 여부를 시간순으로 적으면 빠뜨릴 가능성이 줄어듭니다. 건강보험 진료내역이나 병원 영수증을 참고해 기억과 기록을 맞춰 보는 것도 도움이 됩니다."],
+    ["검사 결과가 정상이어도 검사 사실 자체가 질문 대상일 수 있습니다. 예를 들어 재검 안내를 받았거나 추적 관찰을 권유받았다면 단순 정상 결과와 다르게 볼 수 있습니다. 질문서가 최근 몇 개월 또는 몇 년 안의 검사와 치료를 묻는다면 결과가 좋았는지보다 해당 사실이 있었는지를 기준으로 답해야 합니다."],
+    ["약 처방은 약 이름을 몰라도 기간과 목적을 정리할 수 있습니다. 감기처럼 일시적인 처방과 혈압, 당뇨, 통증처럼 반복되는 처방은 심사 의미가 다릅니다. 약국 봉투나 처방전 사진을 보관해 두면 상담자가 추가 질문을 할 때 추정으로 답하지 않고 정확히 설명할 수 있습니다."],
+    ["애매한 기록은 숨기는 것보다 질문으로 남기는 편이 안전합니다. 고지 대상인지 확신이 없을 때는 상담자에게 해당 진료가 질문 범위에 포함되는지 물어보고 답변을 메모해야 합니다. 나중에 보험금 청구 단계에서 문제가 생기면 이 기록이 당시 성실하게 확인했다는 근거가 될 수 있습니다."]
+  ],
+  "insurance-existing-policy-review": [
+    ["기존 보험 점검은 해지할 상품을 찾는 작업이 아니라 이미 확보한 보장 자산을 해석하는 과정입니다. 오래된 계약은 보험료가 낮거나 보장 조건이 좋은 경우도 있으므로 상품명만 보고 판단하면 안 됩니다. 보장개시일, 갱신 여부, 주요 특약, 면책과 감액 조건을 함께 봐야 실제 가치가 보입니다."],
+    ["증권을 담보 기능별로 나누면 중복과 공백이 드러납니다. 진단비가 여러 개 있어도 보장 질병 범위가 다를 수 있고, 수술비가 많아 보여도 실제 자주 쓰는 항목이 빠져 있을 수 있습니다. 보험사별 계약을 따로 보는 대신 가족 전체의 보장 지도를 만든다는 생각으로 정리하는 것이 좋습니다."],
+    ["보험료 부담을 줄일 때는 해지보다 감액, 특약 조정, 납입 방식 변경을 먼저 검토해야 합니다. 한 번 해지한 계약은 같은 조건으로 되살리기 어렵고, 새 계약은 나이와 건강 상태가 다시 반영됩니다. 특히 실손이나 오래된 비갱신 특약은 대체 가능성을 확인한 뒤 결정해야 합니다."],
+    ["점검 결과는 즉시 바꾸기보다 우선순위를 붙여 보관해야 합니다. 당장 조정할 항목, 다음 갱신 때 볼 항목, 가족 변화가 있을 때 다시 볼 항목을 나누면 성급한 결정이 줄어듭니다. 상담을 받았다면 추천 이유와 제외한 이유까지 함께 적어 두는 것이 다음 점검에 도움이 됩니다."]
+  ],
+  "insurance-coverage-priority": [
+    ["보장 우선순위는 남들이 많이 가입한 담보가 아니라 내 생활이 흔들리는 위험부터 정해야 합니다. 소득 중단, 큰 치료비, 가족 부양, 배상책임처럼 감당하기 어려운 손실을 먼저 적어 보면 필요한 보장의 순서가 보입니다. 작은 치료비를 모두 보장받으려다 큰 위험 대비가 약해지는 구조는 피해야 합니다."],
+    ["정액 보장과 실손 보장은 역할이 다릅니다. 실손은 실제 부담한 의료비를 기준으로 보고, 정액 보장은 진단이나 수술 같은 사건 발생에 따라 정해진 금액을 지급합니다. 두 보장을 같은 기준으로 비교하면 우선순위가 흐려지므로 치료비 보전용인지 생활비 보완용인지 목적을 나누어 판단해야 합니다."],
+    ["확률이 낮아 보여도 발생하면 감당하기 어려운 위험은 우선순위가 높을 수 있습니다. 반대로 자주 발생하지만 비용이 작다면 보험보다 비상금으로 대응하는 편이 나을 때도 있습니다. 보장 선택은 공포를 줄이는 일이 아니라 내 재정으로 감당 가능한 선과 불가능한 선을 나누는 과정입니다."],
+    ["우선순위는 한 번 정하면 끝나는 것이 아닙니다. 결혼, 출산, 주택 구입, 퇴직, 자영업 시작처럼 생활 구조가 바뀌면 필요한 보장도 달라집니다. 최소 1년에 한 번은 보험료 부담, 가족 책임, 기존 보장 변화를 같이 보고 순위를 다시 조정하는 것이 좋습니다."]
+  ],
+  "insurance-premium-budget": [
+    ["보험료 예산은 월 납입액만 보고 정하면 과소평가되기 쉽습니다. 갱신형 담보가 많으면 시간이 지날수록 보험료가 변할 수 있고, 여러 계약을 합치면 총액 부담이 커집니다. 가입 전에는 월 보험료와 연 보험료, 앞으로 오를 가능성이 있는 항목을 함께 적어야 유지 가능성을 판단할 수 있습니다."],
+    ["갱신형과 비갱신형은 좋고 나쁨의 문제가 아니라 부담 시점의 차이입니다. 갱신형은 초기 보험료가 낮을 수 있지만 장기 유지 부담을 봐야 하고, 비갱신형은 초기 부담이 높아도 예측이 쉬울 수 있습니다. 자신의 소득 흐름과 은퇴 시점을 기준으로 어떤 구조가 맞는지 확인해야 합니다."],
+    ["보험료가 부담될 때 가장 먼저 줄일 것은 핵심 보장이 아니라 우선순위가 낮은 특약입니다. 중복되는 소액 담보, 사용 가능성이 낮은 부가 특약, 목적이 불분명한 담보를 정리하면 큰 위험 대비를 유지하면서 비용을 낮출 수 있습니다. 무조건 저렴한 상품으로 바꾸면 나중에 보장 공백이 커질 수 있습니다."],
+    ["최종 예산은 상담자가 제시한 설계안보다 본인의 생활비 흐름에서 검증해야 합니다. 대출 상환, 교육비, 부모 부양, 비상금 적립을 고려하고도 부담 없는 금액인지 확인해야 합니다. 3개월 정도 납입해 보고 빠듯할 금액이라면 장기 유지가 어렵다는 신호로 받아들이는 것이 좋습니다."]
+  ],
+  "insurance-family-info": [
+    ["가족 보험 정보는 개인별 계약을 모으는 것에서 끝나지 않습니다. 누가 경제활동을 하고, 누가 부양을 받으며, 사고나 질병 때 어떤 비용이 발생하는지를 함께 봐야 합니다. 가족 구성원의 역할을 기준으로 정리하면 필요한 보장과 중복 보장이 훨씬 잘 보입니다."],
+    ["미성년 자녀 보험은 보호자 동의와 청구 권한이 중요합니다. 계약자, 피보험자, 수익자가 누구인지에 따라 보험금 수령과 서류 제출 방식이 달라질 수 있습니다. 자녀가 성인이 된 뒤에도 예전 계약 구조가 그대로 남아 있는 경우가 있으므로 가족 변화가 있을 때 수익자와 연락처를 함께 확인해야 합니다."],
+    ["부모님 보험은 건강 정보 동의와 개인정보 보호를 조심해야 합니다. 가족이라고 해서 모든 자료를 임의로 확인할 수 있는 것은 아니며, 실제 청구나 상담에는 본인 동의가 필요할 수 있습니다. 보험 점검을 돕는 목적이라면 먼저 보장 목록과 보험료 수준처럼 필요한 범위부터 확인하는 것이 좋습니다."],
+    ["가족 전체 보장을 한눈에 보면 빈틈이 보입니다. 한 사람에게 진단비가 과도하게 몰려 있거나, 실제 소득을 책임지는 사람의 보장이 부족한 경우가 흔합니다. 가족 단위 점검표에는 보험료 총액, 보장 핵심, 청구 담당자, 비상 연락처를 함께 적어 두면 실제 상황에서 도움이 됩니다."]
+  ],
+  "insurance-claim-history": [
+    ["병력과 청구이력은 나를 불리하게 만드는 자료가 아니라 보험 가입과 청구를 정확히 설명하는 근거입니다. 병명만 기억하면 실제 치료 기간이나 검사 결과를 놓치기 쉽습니다. 날짜, 병원명, 진료 목적, 처방 여부, 완치 또는 경과 관찰 상태를 순서대로 적으면 상담과 청구 모두에서 같은 설명을 유지할 수 있습니다."],
+    ["과거 보험금 지급 이력은 다음 가입 심사에서 질문으로 이어질 수 있습니다. 어떤 질병으로 얼마를 받았는지가 아니라 어떤 치료가 있었고 지금 상태가 어떤지가 핵심입니다. 지급 내역서, 진단서, 진료확인서를 함께 보관하면 나중에 기억에 의존하지 않고 사실관계를 확인할 수 있습니다."],
+    ["완치와 경과 관찰은 분명히 나누어야 합니다. 치료가 끝났다고 생각했지만 정기검진을 계속 받는다면 심사에서는 현재 관리 중인 이력으로 볼 수 있습니다. 의사 소견서나 진료기록에 적힌 표현을 확인하고, 완치일이나 마지막 내원일을 정확히 적는 것이 중요합니다."],
+    ["청구이력 정리는 많이 제출하기 위한 준비가 아니라 필요한 자료를 빠르게 찾기 위한 준비입니다. 질병별 폴더, 사고별 폴더, 연도별 파일명을 정해 두면 추가 서류 요청이 왔을 때 대응이 빨라집니다. 개인정보가 포함된 문서는 공유용과 보관용을 분리해 불필요한 노출을 줄여야 합니다."]
+  ],
+  "insurance-beneficiary-check": [
+    ["보험수익자는 계약 당시 정한 내용이 자동으로 현재 가족 상황에 맞춰 바뀌지 않습니다. 결혼, 이혼, 출산, 사망, 가족관계 변화가 있었는데 예전 지정이 그대로 남아 있으면 실제 보험금 지급 때 분쟁이 생길 수 있습니다. 정기 점검 때는 계약자와 피보험자뿐 아니라 수익자까지 함께 확인해야 합니다."],
+    ["수익자 구분은 사망보험금, 진단비, 입원비처럼 보험금 종류마다 다를 수 있습니다. 한 계약 안에서도 보험금 성격에 따라 받는 사람이 달라질 수 있으므로 증권의 수익자 항목을 세부적으로 봐야 합니다. 단순히 가족으로 되어 있다고 안심하지 말고 구체적으로 누구인지 확인하는 것이 좋습니다."],
+    ["미성년자나 고령 가족이 수익자인 경우에는 실제 수령 절차까지 생각해야 합니다. 대리 수령, 법정대리인 확인, 가족관계 서류가 필요할 수 있고, 상황에 따라 지급이 지연될 수 있습니다. 보험금이 필요한 순간에 절차가 막히지 않도록 미리 확인해 두는 것이 안전합니다."],
+    ["수익자 변경은 신청만으로 끝났다고 보기 어렵습니다. 보험사가 변경을 반영했는지, 변경 후 증권이나 확인서에 새 내용이 표시되는지 확인해야 합니다. 변경 전후 서류를 함께 보관하면 나중에 어떤 기준으로 지급돼야 하는지 설명하기 쉽습니다."]
+  ],
+  "insurance-payment-method": [
+    ["보험료 납입 방법은 편의성보다 연체 위험을 줄이는 기준으로 정해야 합니다. 자동이체 계좌의 잔액 흐름, 급여일, 카드 결제일이 맞지 않으면 의도치 않은 미납이 생길 수 있습니다. 한 달 보험료만 볼 것이 아니라 여러 보험료가 같은 날짜에 몰리는지도 확인해야 합니다."],
+    ["카드 납입은 포인트나 무이자 혜택이 있어도 카드 만료와 한도 문제가 있습니다. 카드가 재발급되거나 분실 정지되면 보험료가 빠지지 않을 수 있고, 알림을 놓치면 실효 위험이 커집니다. 카드 납입을 선택한다면 만료월과 보험사 자동 갱신 가능 여부를 반드시 확인해야 합니다."],
+    ["계약자와 납입자가 다르면 환급, 미납 안내, 증빙 처리에서 혼선이 생길 수 있습니다. 가족 명의 계좌로 대신 내는 경우에도 실제 계약 권한은 계약자에게 있다는 점을 구분해야 합니다. 납입자 변경을 했다면 변경일, 계좌, 승인 여부를 기록해 두어야 추후 문의가 쉬워집니다."],
+    ["미납 안내를 받는 연락처가 오래되면 작은 실수가 큰 문제로 이어집니다. 휴대폰 번호, 이메일, 우편 주소가 최신인지 확인하고 보험사 앱 알림이 꺼져 있지 않은지도 점검해야 합니다. 납입 방법을 바꾼 뒤 첫 달에는 실제 출금 또는 승인 내역을 확인하는 것이 좋습니다."]
+  ],
+  "insurance-terms-before-sign": [
+    ["약관 확인은 어려운 문장을 모두 외우는 일이 아니라 내 결정에 영향을 주는 조건을 찾는 과정입니다. 보장하는 경우, 보장하지 않는 경우, 감액되는 기간, 보험금 지급 제한을 먼저 표시하면 핵심이 보입니다. 상품설명서의 요약만 보고 가입하지 말고 최종 약관의 조항과 같은 내용인지 확인해야 합니다."],
+    ["면책기간과 감액기간은 가입 직후 가장 자주 오해되는 부분입니다. 보험료를 냈다고 모든 보장이 즉시 같은 금액으로 시작되는 것은 아닐 수 있습니다. 특히 치아, 암, 일부 질병 보장처럼 기간 제한이 있는 담보는 보장개시일과 감액 종료일을 따로 적어 두는 것이 좋습니다."],
+    ["예시 문구는 이해를 돕기 위한 설명이지 내 계약의 확정 조건이 아닐 수 있습니다. 나이, 직업, 건강 상태, 가입금액, 특약 구성에 따라 실제 적용이 달라집니다. 상담 자료의 예시와 청약서의 실제 담보명이 다르면 반드시 질문하고, 답변을 받은 뒤 서명해야 합니다."],
+    ["서명 전 질문 목록은 나중에 분쟁을 줄이는 가장 현실적인 장치입니다. 이해하지 못한 용어, 제외되는 질병, 갱신 보험료, 해지환급금, 청구 서류를 짧게 적어 상담자에게 확인하세요. 설명을 들었다면 날짜와 핵심 답변을 남겨 두어야 가입 후에도 같은 기준으로 계약을 관리할 수 있습니다."]
+  ]
 };
 
 Object.assign(UNIQUE_ARTICLE_COPY, {
@@ -1316,7 +1462,12 @@ function homeFaqs() {
     ["청구 체크리스트는 보험금 청구 서류만 보는 페이지인가요?", "아닙니다. 청구 체크리스트는 보험금 청구 전 서류 확인뿐 아니라 보험 가입 전 점검 글도 함께 보는 페이지입니다. 고지의무, 기존 보험 증권, 병력과 청구이력, 보험료 예산, 납입 방법, 수익자 지정, 약관 확인을 가입 전에 정리해 두면 나중에 보험금 청구 단계에서 생길 수 있는 보완 요청과 분쟁 가능성을 줄일 수 있습니다."],
     ["홈에 있는 가이드 글은 어떤 기준으로 골랐나요?", "사진으로 지정한 외부 링크 항목과 실제 검색 수요가 있는 항목을 중심으로 남겼습니다. 손해보험 치아보험 청구양식, 생명보험 치아보험 청구양식, 대면 간편견적, 할인·할증요인 조회시스템, 보험개발원 등록, 과실비율 정보포털, 사업장 화재보험 체크리스트, 건축물대장, 보험연수원, 실손보험 인수기준, 승강기 정보 열람, 대리점 협회 상품 비교처럼 사용자가 직접 원자료를 찾는 항목을 우선했습니다."],
     ["보험금 청구를 이 사이트에서 직접 할 수 있나요?", "아닙니다. 이 사이트는 자료 위치와 확인 순서를 정리한 정보형 사이트입니다. 실제 보험금 청구, 계약 체결, 교육 이수, 사고 접수, 약관 확인은 각 보험회사나 기관의 공식 채널에서 진행해야 합니다. 이 사이트의 설명은 준비 순서를 돕기 위한 것이며, 보험금 지급 가능성이나 가입 가능성을 보장하지 않습니다."],
-    ["표의 번호나 링크가 실제와 다르면 어떻게 해야 하나요?", "보험회사와 기관 사이트는 개편되거나 접수 부서가 바뀔 수 있습니다. 번호나 링크가 다르게 보이면 문의 페이지로 알려주세요. 제보할 때는 회사명, 잘못된 항목, 현재 확인한 공식 URL 또는 고객센터 안내 내용을 함께 보내주시면 검토가 빠릅니다. 다만 최종 안내는 항상 해당 보험회사나 기관의 공식 공지를 우선합니다."]
+    ["표의 번호나 링크가 실제와 다르면 어떻게 해야 하나요?", "보험회사와 기관 사이트는 개편되거나 접수 부서가 바뀔 수 있습니다. 번호나 링크가 다르게 보이면 문의 페이지로 알려주세요. 제보할 때는 회사명, 잘못된 항목, 현재 확인한 공식 URL 또는 고객센터 안내 내용을 함께 보내주시면 검토가 빠릅니다. 다만 최종 안내는 항상 해당 보험회사나 기관의 공식 공지를 우선합니다."],
+    ["보험사명과 전산 바로가기는 어떤 차이가 있나요?", "보험사명을 누르면 이 사이트 안의 보험사별 정리 페이지로 이동합니다. 해당 페이지에서는 고객센터, 인콜 모니터링, 전산 헬프데스크, 청구팩스, 약관확인, 청구서 링크를 한 번 더 확인할 수 있습니다. 반면 전산 바로가기는 보험사 또는 관련 전산 시스템의 외부 도메인으로 이동합니다. 전산 접속은 회사 내부 권한, 대리점 권한, 브라우저 보안 설정에 따라 열리지 않을 수 있으므로 접속 오류가 나면 먼저 공식 전산 공지와 담당 관리자 안내를 확인해야 합니다."],
+    ["전화번호가 파란색 링크처럼 보이지 않게 한 이유는 무엇인가요?", "고객센터, 인콜 모니터링, 헬프데스크, 팩스번호는 사용자가 실수로 클릭해 이동하는 정보가 아니라 확인하고 복사하거나 별도로 입력하는 정보입니다. 그래서 전화번호 칸은 링크가 아닌 일반 텍스트로 표시되도록 구성했습니다. 모바일 브라우저가 번호를 자동 링크처럼 인식하는 경우도 있지만, 사이트 코드에서는 전화번호에 tel 링크를 넣지 않았고 표 안의 일반 번호는 클릭 목적의 링크로 쓰지 않도록 했습니다."],
+    ["보험사 개별 페이지가 검색에 많이 잡히면 문제가 되지 않나요?", "보험사 개별 페이지는 사용자가 표에서 회사를 눌렀을 때 세부 정보를 확인하기 위한 보조 페이지입니다. 사이트맵에는 핵심 페이지와 가이드 글 중심으로 제출하고, 개별 보험사 페이지는 검색 색인을 늘리기 위한 얇은 페이지처럼 운영하지 않는 것이 좋습니다. 검색 노출은 홈, 청구 체크리스트, 독립 페이지, 고유한 가이드 글이 중심이 되는 편이 안정적입니다."],
+    ["가이드 글의 FAQ는 왜 길게 작성되어 있나요?", "검색 사용자는 단순히 링크 하나만 찾는 경우도 있지만, 실제로는 그 링크를 언제 쓰는지, 어떤 서류가 필요한지, 공식 기준은 어디서 확인해야 하는지까지 함께 알고 싶어 합니다. 그래서 FAQ 답변은 한두 문장으로 끝내지 않고 실무에서 헷갈리는 기준, 주의할 점, 기록으로 남겨야 할 내용을 함께 설명합니다. 이렇게 해야 글이 얇은 링크 모음이 아니라 독립적인 안내 페이지로 기능할 수 있습니다."],
+    ["외부 링크가 404인지 어떻게 확인하면 좋나요?", "전산 링크와 청구서 링크는 단순히 브라우저에서 열리는지만 볼 것이 아니라 최종 목적에 맞는 페이지로 이동하는지도 봐야 합니다. 로그인 전용 전산은 외부에서 403이나 로그인 화면이 나와도 실제 링크가 잘못된 것은 아닐 수 있습니다. 반대로 보험사 공식 안내나 청구서 파일이 완전히 사라진 경우에는 대체 경로를 찾아야 하므로, 확인할 때는 상태코드와 함께 화면의 제목, 도메인, 리다이렉트 결과를 같이 보는 것이 좋습니다."]
   ];
 }
 
@@ -1444,7 +1595,7 @@ function page(title, body, env, options = {}) {
   ${footer(env)}
 </body>
 </html>`;
-  return new Response(html, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": status === 200 ? "public, max-age=300" : "no-store" } });
+  return new Response(html, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store, max-age=0" } });
 }
 
 function footer(env) {
@@ -1470,7 +1621,7 @@ function css() {
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans KR",sans-serif;line-height:1.72;letter-spacing:0}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
     .site-header{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 1180px)/2))}.brand{font-weight:900;color:#111827;font-size:20px}.site-header nav{display:flex;gap:18px;flex-wrap:wrap}.site-header nav a{color:#26364d;font-weight:800;font-size:14px}
     main{max-width:1180px;margin:0 auto;padding:30px 18px 64px}.hero{background:#fff;border:1px solid var(--line);padding:34px;margin-bottom:16px}.eyebrow{margin:0 0 8px;color:var(--accent);font-weight:900}.hero h1,.narrow h1{margin:0 0 12px;font-size:36px;line-height:1.25;color:#111827}.hero p,.lead{font-size:18px;color:#334155;margin:0;word-break:keep-all}.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.primary-btn,.secondary-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 17px;border-radius:4px;font-weight:900}.primary-btn{background:#1d5fd1;color:#fff}.secondary-btn{background:#fff;color:#1e3a8a;border:1px solid #c7d7f5}.download-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 18px}.download-strip div{background:#fff;border-bottom:2px solid var(--accent);display:flex;align-items:center;justify-content:center;gap:14px;min-height:58px}.download-strip a{border:1px solid var(--accent);color:var(--accent);padding:9px 18px;font-weight:900}.link-groups{background:#fff;border:1px solid var(--line);padding:22px;margin-bottom:18px}.link-group{margin:0 0 26px}.link-group:last-child{margin-bottom:0}.link-group h2{font-size:25px;color:#72777d;margin:0 0 8px}.link-group div{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 24px}.link-group a,.pill-links a{display:flex;align-items:center;justify-content:center;min-height:28px;border:1px solid #cfd8e3;border-radius:999px;color:#344054;font-size:14px;background:#fff}.link-group a:hover,.pill-links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
-    .table-section,.content-block,.narrow{background:#fff;border:1px solid var(--line);padding:24px;margin-top:18px}.narrow{max-width:920px;margin-left:auto;margin-right:auto}.narrow.wide{max-width:1180px}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:16px}.section-head h2,.block-header h2,.content-block h2,.narrow h2{margin:0;color:#111827}.section-head p,.block-header p{margin:0;color:var(--muted);max-width:640px}.table-wrap{overflow:auto;border:1px solid var(--line)}.data-table{width:100%;min-width:1080px;border-collapse:collapse;background:#fff}.data-table th{background:#fafafa;color:#111827;border-bottom:2px solid var(--accent);padding:9px 8px;text-align:center;white-space:nowrap}.data-table td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}.data-table td:first-child,.data-table th:first-child{border-left:0}.data-table tr.shaded td{background:#fafafa}.company{display:block;color:#111827;font-weight:900}.small-link{display:block;font-size:12px;color:#64748b}.table-phone{color:#111827;font-weight:500}.table-note{color:#475569;font-size:13px}.browser-icons{display:inline-flex;gap:4px}.browser-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;font-weight:900}.browser-icon.chrome{background:#1a73e8}.browser-icon.edge{background:#16a3a8}.hand-link{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;color:#111827;font-size:25px;line-height:1;border-radius:50%}.hand-link:hover{background:#f1f5f9;text-decoration:none}.extra-link{display:block;font-size:12px;color:#64748b;margin-top:2px}
+    .table-section,.content-block,.narrow{background:#fff;border:1px solid var(--line);padding:24px;margin-top:18px}.narrow{max-width:920px;margin-left:auto;margin-right:auto}.narrow.wide{max-width:1180px}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:16px}.section-head h2,.block-header h2,.content-block h2,.narrow h2{margin:0;color:#111827}.section-head p,.block-header p{margin:0;color:var(--muted);max-width:640px}.table-wrap{overflow:auto;border:1px solid var(--line)}.data-table{width:100%;min-width:1080px;border-collapse:collapse;background:#fff}.data-table th{background:#fafafa;color:#111827;border-bottom:2px solid var(--accent);padding:9px 8px;text-align:center;white-space:nowrap}.data-table td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}.data-table td:first-child,.data-table th:first-child{border-left:0}.data-table tr.shaded td{background:#fafafa}.data-table a:not(.hand-link):not(.company-link):not(.system-link):not(.extra-link){pointer-events:none;color:#111827!important;text-decoration:none!important;cursor:default}.company{display:block;color:#111827;font-weight:900}.company-link:hover{text-decoration:underline}.system-link{display:block;font-size:12px;color:#64748b;margin-top:2px}.system-link:hover,.extra-link:hover{color:var(--blue);text-decoration:underline}.small-link{display:block;font-size:12px;color:#64748b}.table-phone{color:#111827;font-weight:500;cursor:default}.table-note{color:#475569;font-size:13px}.browser-icons{display:inline-flex;gap:4px}.browser-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;font-weight:900}.browser-icon.chrome{background:#1a73e8}.browser-icon.edge{background:#16a3a8}.hand-link{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;color:#111827;font-size:25px;line-height:1;border-radius:50%}.hand-link:hover{background:#f1f5f9;text-decoration:none}.extra-link{display:block;font-size:12px;color:#64748b;margin-top:2px}
     .topics{padding:28px 0}.topics.in-page{padding-bottom:10px}.block-header{margin-bottom:16px}.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.guide-card{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px;color:var(--text);min-height:220px}.guide-card:hover{border-color:#8fb2e8;text-decoration:none}.guide-card span{font-size:13px;color:var(--accent);font-weight:900}.guide-card h2{font-size:19px;line-height:1.35;margin:8px 0;color:#111827}.guide-card p{margin:0;color:var(--muted);font-size:15px}.card-meta{display:flex;justify-content:space-between;margin-top:13px;color:#8b95a3;font-size:13px}.card-meta em{font-style:normal}.pill-links,.article-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.article-links a{display:flex;align-items:center;justify-content:center;border:1px solid var(--accent);color:var(--accent);min-height:42px;font-weight:900}.content-block.flush{margin:10px 0 20px}.faq{padding:26px 0}.faq-list{border-top:1px solid var(--line);background:#fff}.faq-list details,.article-faq details{border-bottom:1px solid var(--line);padding:0 6px}.faq-list summary,.article-faq summary{cursor:pointer;padding:15px 8px;font-weight:900;color:#111827}.faq-list summary span{color:#1e6bf0}.faq-list p,.article-faq p{margin:0;padding:0 8px 15px 24px;color:var(--muted)}.article-meta{font-size:14px!important;color:#64748b!important}.article h2{margin-top:34px}.article h3{font-size:18px;margin:24px 0 8px;color:#111827}.article-summary{border:1px solid #c7d2fe;background:#f8fbff;padding:18px 20px;margin:22px 0}.article-summary h2{margin-top:0}.article-summary ul,.final-checklist ul{margin:10px 0 0;padding-left:22px}.article-summary li,.final-checklist li{margin:7px 0}.mini-table-wrap{overflow:auto;margin:20px 0;border-top:1px solid var(--line)}.mini-table{width:100%;border-collapse:collapse;min-width:760px}.mini-table th{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-weight:900;color:#111827}.mini-table td{padding:18px 16px;vertical-align:top;border-bottom:1px solid var(--line)}.mini-table td:first-child{font-weight:900;color:#111827}.final-checklist{border-top:2px solid var(--accent);padding-top:18px;margin-top:28px}.article-checklist{border:1px solid #bfdbfe;background:#f8fbff;padding:18px;margin:22px 0}.article-checklist h2{margin-top:0}.info-list{border:1px solid var(--line);margin:22px 0}.info-list div{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line)}.info-list div:first-child{border-top:0}.info-list dt{background:#fafafa;padding:12px 14px;font-weight:900}.info-list dd{margin:0;padding:12px 14px}.text-link{font-weight:900;color:#a8003f}
     .site-footer{background:#eef2f7;border-top:1px solid var(--line);padding:30px 18px}.footer-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:30px}.footer-inner p{margin:8px 0 0;color:#526173}.footer-links{display:grid;gap:8px;min-width:170px}.footer-links a{font-size:18px;color:#16304f}
     @media(max-width:880px){.site-header{padding:14px 18px;align-items:flex-start;flex-direction:column}.hero h1,.narrow h1{font-size:28px}.download-strip,.link-group div,.guide-grid,.pill-links,.article-links{grid-template-columns:1fr 1fr}.section-head{display:block}.footer-inner{display:block}.footer-links{margin-top:18px}.info-list div{grid-template-columns:1fr}.info-list dt{border-bottom:1px solid var(--line)}}
@@ -1584,3 +1735,4 @@ function esc(value) {
 function escXml(value) {
   return esc(value);
 }
+
