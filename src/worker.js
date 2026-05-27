@@ -44,12 +44,12 @@ const INSURERS = [
 
 const EXTERNAL_LINKS = {
   "samsung-fire": { system: "https://erp.samsungfire.com", terms: "https://www.samsungfire.com/page/VH.REIF0011.do", claim: "https://drive.google.com/file/d/1j99Fa5eGfBDJSBVL2uM8mix5jqF5dn3i/view?usp=drive_link" },
-  "meritz-fire": { system: "http://sales.meritzfire.com", terms: "https://www.meritzfire.com/disclosure/product-announcement/product-list.do#!/", claim: "https://drive.google.com/file/d/1BRrqHi1lIisWwpwAirTmu26s3wJmnLus/view?usp=drive_link" },
+  "meritz-fire": { system: "https://sales.meritzfire.com/", terms: "https://www.meritzfire.com/disclosure/product-announcement/product-list.do#!/", claim: "https://drive.google.com/file/d/1BRrqHi1lIisWwpwAirTmu26s3wJmnLus/view?usp=drive_link" },
   "db-fire": { system: "https://www.mdbins.com", terms: "https://www.idbins.com/FWMAIV1534.do", claim: "https://drive.google.com/file/d/1m5HurA0NkjcnrA8cISgxFeT6MiUm1Yf1/view?usp=sharing" },
   "kb-fire": { system: "https://nsales.kbinsure.co.kr/", terms: "https://www.kbinsure.co.kr/CG802030001.ec", claim: "https://drive.google.com/file/d/1hkfo8d-jtol2gzjMU5-LHmwUyULscFYa/view?usp=sharing" },
   "hyundai-fire": { system: "https://sp.hi.co.kr", terms: "https://www.hi.co.kr/serviceAction.do?view=bin/PA/03/HHPA03010M#none", claim: "https://drive.google.com/file/d/1GLDWITf7O1W-xNszfV9oajHqTxpcbRgv/view?usp=sharing" },
-  "hanwha-fire": { system: "http://portal.hwgeneralins.com", terms: "https://www.hwgeneralins.com/notice/ir/product-ing01.do", claim: "https://drive.google.com/file/d/1qSt7pUiXNh_IruI7KUk4c_w_0tHhcrpz/view?usp=drive_link", extraClaim: "https://drive.google.com/file/d/1gWh3panTtHqimOVBcy3qY6rQqC2kWfgm/view?usp=sharing" },
-  "lotte-fire": { system: "http://lottero.lotteins.co.kr", terms: "https://www.lotteins.co.kr/web/C/D/H/cdh190.jsp", claim: "https://drive.google.com/file/d/1kyoHLbzboKmnVnfEnz_m_Z9jRu3NI14v/view?usp=drive_link" },
+  "hanwha-fire": { system: "https://portal.hwgeneralins.com/", terms: "https://www.hwgeneralins.com/notice/ir/product-ing01.do", claim: "https://drive.google.com/file/d/1qSt7pUiXNh_IruI7KUk4c_w_0tHhcrpz/view?usp=drive_link", extraClaim: "https://drive.google.com/file/d/1gWh3panTtHqimOVBcy3qY6rQqC2kWfgm/view?usp=sharing" },
+  "lotte-fire": { system: "https://lottero.lotteins.co.kr/", terms: "https://www.lotteins.co.kr/web/C/D/H/cdh190.jsp", claim: "https://drive.google.com/file/d/1kyoHLbzboKmnVnfEnz_m_Z9jRu3NI14v/view?usp=drive_link" },
   "heungkuk-fire": { system: "https://sales.heungkukfire.co.kr/", terms: "https://www.heungkukfire.co.kr/FRW/announce/insGoodsGongsiSale.do", claim: "https://drive.google.com/file/d/1K426vw-3aa3G2G8BpDZ48D3Y-l6Nmeke/view?usp=drive_link" },
   "hana-fire": { system: "https://sfa.saleshana.com/index.html", terms: "https://www.hanainsure.co.kr/w/disclosure/product/saleProduct", claim: "https://drive.google.com/file/d/17_J4Sf7K5r7qs-m8PgW5SiYzkJdWVHX0/view?usp=sharing" },
   "nh-fire": { system: "https://ss.nhfire.co.kr/", terms: "https://www.nhfire.co.kr/announce/productAnnounce/retrieveInsuranceProductsAnnounce.nhfire", claim: "https://drive.google.com/file/d/1yoSLHYJgSNOhTVvKd4DYTuZLZLYrLBd9/view?usp=drive_link" },
@@ -57,31 +57,31 @@ const EXTERNAL_LINKS = {
   "aig": { system: "https://sso.aig.co.kr/gaLogin/gaLogin.jsp", terms: "https://www.aig.co.kr/wo/dpwot001.html?menuId=MS702", claim: "https://drive.google.com/file/d/1asRJiyCd2PrYd8MfSUOCcsvqV-n--YGR/view?usp=sharing" },
   "ace": { system: "https://mganet.mggeneralins.com", terms: "https://www.mggeneralins.com/PB031210DM.scp?menuId=MN0803006", claim: "https://drive.google.com/file/d/1DV1s6_ZHUOddQg4J_OSuAmdbKoFdjAID/view?usp=drive_link" },
   "hanwha-life": { system: "https://hmp.hanwhalife.com/online/ga", terms: "https://www.hanwhalife.com/main/disclosure/goods/disclosurenotice/DF_GDDN000_P10000.do?MENU_ID1=DF_GDGL000", claim: "https://drive.google.com/file/d/1FKsmRFUqWUn7ickcercCRuN7C4bt916r/view?usp=sharing", extraClaim: "https://drive.google.com/file/d/1Zx9mG3Yv7mwW5cKt9uM4riFukbskgW8G/view?usp=sharing" },
-  "tongyang-life": { system: "http://1004.myangel.co.kr", terms: "https://www.myangel.co.kr/paging/WE_AC_WEPAAP020100L", claim: "https://drive.google.com/file/d/1NsasxhWbu_VhHT9ksYIS1L07bsCej8A8/view?usp=drive_link", extraClaim: "https://drive.google.com/file/d/1tblgqK8a3wt2fDGz-OO-Ngn9hlLqj_kB/view?usp=sharing" },
+  "tongyang-life": { system: "https://1004.myangel.co.kr/colgnsf001m.wqv", terms: "https://www.myangel.co.kr/paging/WE_AC_WEPAAP020100L", claim: "https://drive.google.com/file/d/1NsasxhWbu_VhHT9ksYIS1L07bsCej8A8/view?usp=drive_link", extraClaim: "https://drive.google.com/file/d/1tblgqK8a3wt2fDGz-OO-Ngn9hlLqj_kB/view?usp=sharing" },
   "kyobo-life": { system: "https://ga.kyobo.com", terms: "https://www.kyobo.com/dgt/web/product-official/all-product/search", claim: "https://drive.google.com/file/d/1Pr6k5qkZCyP7Ihbv1Juc1a5MWs3THHUi/view?usp=drive_link" },
   "samsung-life": { system: "https://connectplus.samsunglife.com:10443/gasso/login", terms: "https://www.samsunglife.com/individual/products/disclosure/sales/PDO-PRPRI010110M", claim: "https://drive.google.com/file/d/1fsElWIjaFefHsuI3FChLVVSkqksYozMq/view?usp=sharing", extraClaim: "https://www.samsunglife.com/e_mail/pdf/document/SAMSUNGLIFE_03867_2.pdf" },
   "linea-life": { system: "https://ga.lina.co.kr", terms: "https://www.lina.co.kr/disclosure/product_list.htm?productState=01&productKind=01", claim: "https://drive.google.com/file/d/1k7yy3M0KMJh-JZQXkvUMtE8eIWuobHGL/view?usp=drive_link" },
-  "kdb-life": { system: "http://kss.kdblife.co.kr", terms: "https://www.kdblife.co.kr/ajax.do?scrId=HDLMA002M02P", claim: "https://drive.google.com/file/d/19uSS4v-nixaeOTXClVnRwNVDqyCPQDbN/view?usp=sharing" },
+  "kdb-life": { system: "https://kss.kdblife.co.kr/", terms: "https://www.kdblife.co.kr/ajax.do?scrId=HDLMA002M02P", claim: "https://drive.google.com/file/d/19uSS4v-nixaeOTXClVnRwNVDqyCPQDbN/view?usp=sharing" },
   "im-life": { system: "https://fgs.dgbfnlife.com:8443", terms: "https://www.dgbfnlife.com/BA/BA_A020.do", claim: "https://drive.google.com/file/d/1tGY8JI12MTS8R1LJMbEdjlx9E1kdyOHP/view?usp=drive_link" },
-  "miraeasset-life": { system: "http://www.loveageplan.com", terms: "https://life.miraeasset.com/micro/disclosure/product/PC-HO-080301-000000.do", claim: "https://drive.google.com/file/d/15LzT84_loJl4tOK1YQ4togAed_tEOACI/view?usp=sharing" },
+  "miraeasset-life": { system: "https://www.loveageplan.com/", terms: "https://life.miraeasset.com/micro/disclosure/product/PC-HO-080301-000000.do", claim: "https://drive.google.com/file/d/15LzT84_loJl4tOK1YQ4togAed_tEOACI/view?usp=sharing" },
   "shinhan-life": { system: "https://ga.shinhanlife.co.kr", terms: "https://www.shinhanlife.co.kr/hp/cdhi0010.do", claim: "https://drive.google.com/file/d/1lc8ntVCpWPiFIdv6v-ra21Kb7q_-nQ06/view?usp=drive_link" },
   "kb-life": { system: "https://sfa.kblife.co.kr/", terms: "https://www.kblife.co.kr/?/=true&tab=currently-selling", claim: "https://drive.google.com/file/d/1i-VvJMoBwM8nX3Xz88e2j9dvfGHJnVVB/view?usp=sharing" },
-  "db-life": { system: "http://etopia.idblife.com", terms: "https://www.idblife.com/notice/product/sale", claim: "https://www.idblife.com/support/guide/acbf_clm" },
+  "db-life": { system: "https://etopia.idblife.com/", terms: "https://www.idblife.com/notice/product/sale", claim: "https://www.idblife.com/support/guide/acbf_clm" },
   "hana-life": { system: "https://ga.hanalife.co.kr", terms: "https://hanalife.co.kr/anm/product/allProduct.do?status=on", claim: "https://drive.google.com/file/d/1n9Vh-XKuqLEyqDVqmLmDeK2MMODnkKET/view?usp=sharing" },
   "heungkuk-life": { system: "https://sales.heungkuklife.co.kr/", terms: "https://www.heungkuklife.co.kr/front/public/saleProduct.do?searchFlgSale=Y", claim: "https://drive.google.com/file/d/1ikE6XM8vERcpL9LowLclbnN40XT5kGQn/view?usp=sharing", extraClaim: "https://www.heungkuklife.co.kr/jsps/cyber/file/240517_caregiverUseConfirm.pdf" },
-  "abl-life": { system: "http://ga.abllife.co.kr", terms: "https://www.abllife.co.kr/st/pban/prdtPban/whlPrdt/whlPrdt1/whlPrdt11?page=index", claim: "https://drive.google.com/file/d/1AkFt-PPL1LeYoU6wQEQ62DrTDz08Ii9i/view?usp=sharing" },
+  "abl-life": { system: "https://ga.abllife.co.kr/", terms: "https://www.abllife.co.kr/st/pban/prdtPban/whlPrdt/whlPrdt1/whlPrdt11?page=index", claim: "https://drive.google.com/file/d/1AkFt-PPL1LeYoU6wQEQ62DrTDz08Ii9i/view?usp=sharing" },
   "ibk-pension": { system: "https://sf.ibki.co.kr/", terms: "https://www.ibki.co.kr/process/HP_PBANO_PDT_SP_INDV", claim: "https://www.ibki.co.kr/process/HP_CSCETR_POSN_DOC_INS_LIST?bltb_cod=SC000014&sctn=in&TAB=in" },
   "nh-life": { system: "https://sfa.nhlife.co.kr:8443/", terms: "https://www.nhlife.co.kr/ho/on/HOON0004M00.nhl", claim: "https://drive.google.com/file/d/1ZokHkStvKMfUUUCNM4ajeB_DVzi7h1CT/view?usp=drive_link" },
-  "metlife": { system: "http://metplus.metlife.co.kr", terms: "https://brand.metlife.co.kr/pn/paReal/insuProductDisclMain.do", claim: "https://drive.google.com/file/d/1zVzQV5r-6wn1vmqTyqObZONSfqnbZpJd/view?usp=sharing" },
-  "chubb-life": { system: "http://esmart.chubblife.co.kr", terms: "https://www.chubblife.co.kr/front/official/sale/list.do", claim: "https://www.chubblife.co.kr/front/ctmcenter/insurance/listDocu.do" },
+  "metlife": { system: "https://metplus.metlife.co.kr/", terms: "https://brand.metlife.co.kr/pn/paReal/insuProductDisclMain.do", claim: "https://drive.google.com/file/d/1zVzQV5r-6wn1vmqTyqObZONSfqnbZpJd/view?usp=sharing" },
+  "chubb-life": { system: "https://esmart.chubblife.co.kr/", terms: "https://www.chubblife.co.kr/front/official/sale/list.do", claim: "https://www.chubblife.co.kr/front/ctmcenter/insurance/listDocu.do" },
   "fubon-hyundai": { system: "https://ez.fubonhyundai.com/", terms: "https://www.fubonhyundai.com/#CUSI150102010101", claim: "https://www.fubonhyundai.com/#CUSI070100000000" },
-  "bnp-cardif": { system: "http://ga.cardif.co.kr", terms: "https://www.cardif.co.kr/disclosure/papag101.do", claim: "https://www.cardif.co.kr/customer-center/hcwgi001.do" },
+  "bnp-cardif": { system: "https://ga.cardif.co.kr/index.jsp", terms: "https://www.cardif.co.kr/disclosure/papag101.do", claim: "https://www.cardif.co.kr/customer-center/hcwgi001.do" },
   "aia-life": { system: "https://imap.aia.co.kr", terms: "https://www.aia.co.kr/ko/our-products.html", claim: "https://drive.google.com/file/d/1QQ2sU3-WhjRyN2HI9xwh-kj6HVxWfcUg/view?usp=sharing" },
-  "mg": { system: "https://insure.kfcc.co.kr/", terms: "https://insu.kfcc.co.kr/ino/inoGuide.do", claim: "http://xn--989an19aika.com/pdf/새마을금고.pdf" },
-  "the-k": { system: "https://www.ktcu.or.kr/MH/MH-P010M01.do", terms: "https://www.ktcu.or.kr/IS/IS-P170M01.do", claim: "http://xn--989an19aika.com/pdf/교직원공제회.pdf" },
+  "mg": { system: "https://insure.kfcc.co.kr/", terms: "https://insu.kfcc.co.kr/ino/inoGuide.do" },
+  "the-k": { system: "https://www.ktcu.or.kr/MH/MH-P010M01.do", terms: "https://www.ktcu.or.kr/IS/IS-P170M01.do" },
   "post-office": { system: "https://epostlife.go.kr/LNLNDM10DM.do", terms: "https://epostlife.go.kr/", claim: "https://epostlife.go.kr/cms/docimg/i-board/form/2023/02/20230221.pdf" },
   "suhyup": { system: "https://www.suhyup-bank.com/", claim: "https://psmb.suhyup-bank.com/smart/page/dhp/cmn/dhp100200j.jsp?filePathNm=../DIGITALPDF/ins_dmnd.pdf" },
-  "cu": { system: "https://openbank.cu.co.kr/?sub=6000", terms: "https://openbank.cu.co.kr/?sub=6000", claim: "http://xn--989an19aika.com/pdf/신협.pdf" }
+  "cu": { system: "https://openbank.cu.co.kr/?sub=6000", terms: "https://openbank.cu.co.kr/?sub=6000" }
 };
 
 const GUIDE_ARTICLES = [
@@ -1698,7 +1698,7 @@ function browserIcons(value) {
 }
 
 function externalHandLink(url, label) {
-  if (!url) return "-";
+  if (!url) return `<span class="table-note">고객센터 확인</span>`;
   return `<a class="hand-link" href="${esc(url)}" rel="nofollow noopener" target="_blank" aria-label="${esc(label)}"><span aria-hidden="true">☝</span></a>`;
 }
 
