@@ -54,6 +54,17 @@
   </section>
 
   <div class="container" style="max-width:760px;padding:48px 16px;">
+    <div id="author-admin-flow" style="display:none;background:#f5f9ff;border:1px solid #c8ddff;border-radius:12px;padding:18px 20px;margin-bottom:28px;">
+      <div style="font-size:13px;color:#174ea6;font-weight:800;margin-bottom:6px;">관리자 세션 감지됨</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <p style="margin:0;color:#344054;font-size:14px;line-height:1.7;">운영자 칼럼 허브에서 새 칼럼 작성 화면으로 이동할 수 있습니다.</p>
+        <a href="/admin/#columns" style="display:inline-flex;align-items:center;justify-content:center;background:var(--color-primary);color:#fff;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:800;text-decoration:none;">새 칼럼 작성하기</a>
+      </div>
+    </div>
+    <div id="author-public-flow" style="background:#fff;border:1px solid var(--color-border);border-radius:12px;padding:18px 20px;margin-bottom:28px;">
+      <div style="font-size:13px;color:var(--color-primary);font-weight:800;margin-bottom:6px;">운영자 칼럼 허브</div>
+      <p style="margin:0;color:#344054;font-size:14px;line-height:1.7;">운영자가 정리한 칼럼과 편집 원칙을 함께 확인할 수 있습니다. 칼럼 목록은 <a href="/columns/" style="color:var(--color-primary);font-weight:800;">칼럼 페이지</a>에서 이어집니다.</p>
+    </div>
 
     <!-- 소개글 -->
     <section style="margin-bottom:40px;">
@@ -155,5 +166,13 @@
 </footer>
 <script src="/assets/js/data.js"></script>
 <script src="/assets/js/main.js"></script>
+<script>
+  (function () {
+    const adminKeys = ["gm_admin_session", "gm_authed"];
+    const isAdmin = adminKeys.some((key) => localStorage.getItem(key) === "true" || sessionStorage.getItem(key) === "1");
+    const adminBox = document.getElementById("author-admin-flow");
+    if (adminBox && isAdmin) adminBox.style.display = "block";
+  })();
+</script>
 </body>
 </html>

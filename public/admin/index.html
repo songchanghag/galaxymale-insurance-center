@@ -172,9 +172,9 @@
           <table class="post-table">
             <thead><tr><th>제목</th><th>필진</th><th>날짜</th><th>바로가기</th></tr></thead>
             <tbody>
-              <tr><td>AI 시대의 디지털 리터러시</td><td>김지훈</td><td>2026.06.01</td><td><a href="/columns/ai-digital-literacy/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
-              <tr><td>스마트폰 10년, 우리는 어떻게 달라졌는가</td><td>박소연</td><td>2026.05.20</td><td><a href="/columns/smartphone-decade-reflection/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
-              <tr><td>스펙을 넘어서: 테크 기기 구매에서 정말 중요한 것</td><td>이민준</td><td>2026.05.10</td><td><a href="/columns/tech-purchase-beyond-specs/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
+              <tr><td>테크 뉴스를 읽을 때 숫자보다 먼저 볼 것</td><td>송창학</td><td>2026.06.17</td><td><a href="/columns/tech-news-reading-habit/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
+              <tr><td>AI 도구와 적당한 거리를 두는 법</td><td>송창학</td><td>2026.06.07</td><td><a href="/columns/ai-tool-distance/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
+              <tr><td>조용한 기기가 오래 남는 이유</td><td>송창학</td><td>2026.05.29</td><td><a href="/columns/quiet-device-choice/" target="_blank" style="color:var(--color-primary);font-size:12px;font-weight:600;">보기 →</a></td></tr>
             </tbody>
           </table>
         </div>
@@ -230,6 +230,7 @@ function doLogin() {
     document.getElementById('dashboard').style.display = 'block';
     sessionStorage.setItem('gm_authed', '1');
     initDashboard();
+    openInitialAdminTab();
   } else {
     document.getElementById('login-error').style.display = 'block';
   }
@@ -254,6 +255,18 @@ function showTab(name, el) {
 function initDashboard() {
   renderRecentPosts();
   updateStats();
+}
+
+function openInitialAdminTab() {
+  const hash = (location.hash || '').replace('#', '');
+  if (!hash) return;
+  const linkMap = {
+    columns: ".admin-sidebar a:nth-child(4)",
+    write: ".admin-sidebar a:nth-child(3)",
+    posts: ".admin-sidebar a:nth-child(2)",
+    settings: ".admin-sidebar a:nth-child(5)"
+  };
+  if (linkMap[hash]) showTab(hash, document.querySelector(linkMap[hash]));
 }
 
 function getCustomPosts() {
@@ -414,6 +427,7 @@ if (sessionStorage.getItem('gm_authed') === '1') {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   initDashboard();
+  openInitialAdminTab();
 }
 </script>
 </body>

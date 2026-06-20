@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.title = `${post.title} | GalaxyMale Tech`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute("content", post.subtitle || post.excerpt || post.title);
+  injectArticleJsonLd(post);
 
   const relatedPosts = (post.related || [])
     .map((relatedSlug) => posts.find((item) => item.slug === relatedSlug))
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <h1 class="news-title">${post.title}</h1>
             ${post.subtitle ? `<p class="news-subtitle">${post.subtitle}</p>` : ""}
             <div class="news-byline">
-              <span>송창학 기자</span>
+              <span>${post.author || "GalaxyMale 편집부"} ${post.authorRole || "기자"}</span>
               <span>입력 ${formatDate(post.date)}</span>
               <span>수정 ${formatDate(post.updated || post.date)}</span>
             </div>
@@ -86,10 +87,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
           <footer class="news-article-footer">
             <p>이 기사는 GalaxyMale Tech 편집 기준에 따라 작성되었으며, 제품·서비스 정보는 이용 환경과 시점에 따라 달라질 수 있습니다.</p>
+            <p>운영 과정에서 내용은 순차적으로 보완될 수 있으며, 문의는 <a href="/contact/">문의하기</a> 페이지의 이메일 경로를 이용해 주세요.</p>
             <div class="news-tags">
               ${(post.tags || []).map((tag) => `<a href="/categories/${post.category}/">#${tag}</a>`).join("")}
             </div>
           </footer>
+
+          <section class="news-editor-box" aria-label="기사 작성자와 편집 기준">
+            <div class="news-editor-avatar">${(post.author || "G").slice(0, 1)}</div>
+            <div>
+              <h2>${post.author || "GalaxyMale 편집부"} ${post.authorRole || "기자"}</h2>
+              <p>GalaxyMale Tech는 기술 정보를 생활 속 선택 기준으로 풀어 쓰는 것을 목표로 합니다. 운영자 <a href="/author/">송창학</a>의 편집 원칙에 따라 과장된 표현과 확인되지 않은 최신성을 피합니다.</p>
+            </div>
+          </section>
 
           ${
             relatedPosts.length
@@ -148,4 +158,61 @@ function renderSidePost(post) {
       <span>${post.categoryName} | ${formatDate(post.date)}</span>
       <strong>${post.title}</strong>
     </a>`;
+}
+
+function injectArticleJsonLd(post) {
+  const cfg = window.SITE_CONFIG || {};
+  const old = document.getElementById("article-jsonld");
+  if (old) old.remove();
+
+  const script = document.createElement("script");
+  script.id = "article-jsonld";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "NewsArticle",
+        "headline": post.title,
+        "description": post.subtitle || post.excerpt || post.title,
+        "datePublished": post.date,
+        "dateModified": post.updated || post.date,
+        "author": {
+          "@type": "Person",
+          "name": post.author || cfg.owner?.name || "GalaxyMale 편집부"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": cfg.name || "GalaxyMale Tech",
+          "url": cfg.url || "https://galaxymale.com"
+        },
+        "mainEntityOfPage": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/`,
+        "inLanguage": "ko-KR"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "홈",
+            "item": cfg.url || "https://galaxymale.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": post.categoryName,
+            "item": `${cfg.url || "https://galaxymale.com"}/categories/${post.category}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": post.title,
+            "item": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/`
+          }
+        ]
+      }
+    ]
+  });
+  document.head.appendChild(script);
 }
