@@ -69,11 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
           </header>
 
           <div class="news-share-tools" aria-label="기사 공유">
-            <button type="button" data-share="kakao">카카오</button>
-            <button type="button" data-share="naver">네이버</button>
-            <button type="button" data-share="facebook">Facebook</button>
+            <button type="button" data-share="naver" aria-label="네이버 공유">N</button>
+            <button type="button" data-share="band" aria-label="밴드 공유">BAND</button>
+            <button type="button" data-share="facebook" aria-label="페이스북 공유">f</button>
             <button type="button" data-share="x">X</button>
-            <button type="button" data-share="copy">URL 복사</button>
+            <button type="button" data-share="copy" aria-label="URL 복사">🔗</button>
           </div>
 
           ${post.image ? `
@@ -203,16 +203,16 @@ function setupShareButtons(post, url) {
       if (type === "copy") {
         try {
           await navigator.clipboard.writeText(url);
-          button.textContent = "복사됨";
-          setTimeout(() => (button.textContent = "URL 복사"), 1600);
+          button.textContent = "✓";
+          setTimeout(() => (button.textContent = "🔗"), 1600);
         } catch {
           window.prompt("URL을 복사하세요.", url);
         }
         return;
       }
       const links = {
-        kakao: `https://story.kakao.com/share?url=${encodedUrl}`,
         naver: `https://share.naver.com/web/shareView?url=${encodedUrl}&title=${encodedTitle}`,
+        band: `https://band.us/plugin/share?body=${encodedTitle}&route=${encodedUrl}`,
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
         x: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`
       };

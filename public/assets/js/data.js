@@ -555,7 +555,7 @@ function articleBody(item, index) {
 
     return [
       '<p class="news-lead">' + item.scene + ' ' + item.shift + '</p>',
-      '<div class="news-key-points"><strong>?? ??</strong><ul><li>' + item.impact + '</li><li>' + item.caution + '</li></ul></div>',
+      '<div class="news-key-points"><strong>핵심 요약</strong><ul><li>' + item.impact + '</li><li>' + item.caution + '</li></ul></div>',
       sections,
       '<h2>독자가 남겨둘 질문</h2>',
       '<p>' + item.close + '</p>',
@@ -568,7 +568,7 @@ function articleBody(item, index) {
   }
   return [
     '<p class="news-lead">' + item.scene + ' ' + item.shift + '</p>',
-    '<div class="news-key-points"><strong>?? ??</strong><ul><li>' + item.impact + '</li><li>' + item.caution + '</li></ul></div>',
+    '<div class="news-key-points"><strong>핵심 요약</strong><ul><li>' + item.impact + '</li><li>' + item.caution + '</li></ul></div>',
     '<h2>' + item.title + '</h2><p>' + item.conflict + '</p><p>' + item.detail + '</p><p>' + item.close + '</p><p>' + item.scene + ' ' + item.impact + '</p><p>' + item.shift + ' ' + item.caution + '</p><p>' + item.impact + ' ' + item.detail + '</p>'
   ].join("");
 }
@@ -578,7 +578,7 @@ const POSTS = ARTICLE_SEEDS.map((item, index) => ({
   author: item.author || NEWSROOM_AUTHORS[index % NEWSROOM_AUTHORS.length].name,
   authorRole: item.authorRole || NEWSROOM_AUTHORS[index % NEWSROOM_AUTHORS.length].role,
   categoryName: CATEGORIES.find((category) => category.slug === item.category)?.name || item.category,
-  image: item.image || CATEGORY_IMAGES[item.category],
+  image: item.image || `/assets/images/articles/${item.slug}.webp`,
   imageAlt: `${item.title} 기사 이미지`,
   excerpt: item.subtitle,
   content: articleBody(item, index)
@@ -594,7 +594,7 @@ const COLUMNS = [
     author: "송창학",
     excerpt: "AI 변화에 흔들리지 않기 위해 독자가 가져야 할 기본 관찰법을 정리했습니다.",
     thumb: "COLUMN",
-    image: "/assets/images/articles/ai-news.webp",
+    image: "/assets/images/columns/ai-digital-literacy.webp",
     imageAlt: "AI 시대 디지털 리터러시 칼럼 대표 이미지",
     content: "<p>AI 도구가 늘어나면서 사람들은 더 많은 정보를 더 빠르게 받아들이고 있습니다. 하지만 빠른 답변이 늘었다고 해서 판단까지 쉬워진 것은 아닙니다. 오히려 출처, 맥락, 누락된 조건을 읽어내는 능력이 예전보다 더 중요해졌습니다.</p><p>디지털 리터러시는 단순히 기기를 잘 다루는 기술이 아닙니다. 어떤 정보가 검증된 것인지, 어떤 문장이 추정에 가까운지, 어떤 결과를 다시 확인해야 하는지 구분하는 태도입니다. AI가 초안을 만들어줄수록 사람은 질문을 세우고 결과를 점검하는 쪽으로 역할이 옮겨갑니다.</p>"
   },
@@ -607,7 +607,7 @@ const COLUMNS = [
     author: "이서현",
     excerpt: "스마트폰 변화의 의미를 앱, 알림, 결제, 사진 관리 흐름에서 돌아봅니다.",
     thumb: "COLUMN",
-    image: "/assets/images/articles/mobile-news.webp",
+    image: "/assets/images/columns/smartphone-decade-reflection.webp",
     imageAlt: "스마트폰 10년 변화 칼럼 대표 이미지",
     content: "<p>스마트폰은 더 이상 통화 기기라고 부르기 어렵습니다. 일정표, 지갑, 카메라, 은행, 메모장, 신분 확인 수단이 한 화면 안으로 들어오면서 생활의 순서 자체가 바뀌었습니다.</p><p>지난 10년의 변화에서 눈여겨볼 부분은 화면 크기나 카메라 성능만이 아닙니다. 알림을 어떻게 줄일지, 사진을 어디에 보관할지, 결제를 어떤 방식으로 관리할지 같은 작은 선택이 사용자의 하루를 크게 바꿉니다. 앞으로의 스마트폰 경쟁도 더 강한 기능보다 덜 피곤한 관리 경험에서 갈릴 가능성이 큽니다.</p>"
   },
@@ -620,7 +620,7 @@ const COLUMNS = [
     author: "박민재",
     excerpt: "제품 구매 전 소음, 무게, 복구, 액세서리 비용까지 함께 보는 기준입니다.",
     thumb: "COLUMN",
-    image: "/assets/images/articles/gadget-news.webp",
+    image: "/assets/images/columns/tech-purchase-beyond-specs.webp",
     imageAlt: "테크 제품 구매 칼럼 대표 이미지",
     content: "<p>제품 설명에서 가장 먼저 보이는 것은 성능 수치입니다. 하지만 오래 쓰는 동안 만족도를 좌우하는 것은 팬 소음, 충전 방식, 무게, 수리 접근성, 액세서리 비용처럼 작은 항목인 경우가 많습니다.</p><p>구매 전에는 내가 실제로 쓰는 위치와 시간을 먼저 떠올려야 합니다. 책상 위에 고정해둘 제품인지, 매일 들고 다닐 제품인지, 가족과 함께 쓰는 제품인지에 따라 좋은 선택은 달라집니다. 스펙은 출발점이지만 생활에 맞는지는 별도의 질문으로 확인해야 합니다.</p>"
   }

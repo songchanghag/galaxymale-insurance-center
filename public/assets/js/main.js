@@ -64,9 +64,11 @@ function normalizeSiteChrome() {
       <div class="container">
         <div class="footer-news-brand">
           <a href="/" class="footer-news-logo"><span>G</span>${cfg.name || "GalaxyMale"}</a>
-          <div class="footer-social" aria-label="소셜 링크">
-            <a href="#" aria-label="Facebook">f</a>
-            <a href="#" aria-label="Instagram">◎</a>
+          <div class="footer-social" aria-label="토픽트리 소셜 링크">
+            <a href="https://www.facebook.com/topictree365" target="_blank" rel="noopener noreferrer" aria-label="토픽트리 페이스북">f</a>
+            <a href="https://x.com/topictree24" target="_blank" rel="noopener noreferrer" aria-label="토픽트리 X">X</a>
+            <a href="https://www.instagram.com/topictree24/" target="_blank" rel="noopener noreferrer" aria-label="토픽트리 인스타그램">◎</a>
+            <a href="https://www.youtube.com/@topictree" target="_blank" rel="noopener noreferrer" aria-label="토픽트리 유튜브">▶</a>
           </div>
         </div>
         <div class="footer-news-links">
@@ -83,7 +85,9 @@ function normalizeSiteChrome() {
           <span>주소 : ${owner.address || "서울특별시 강남구 테헤란로 131"}</span>
           <span>대표전화 : ${owner.phone || "0507-2834-7925"}</span>
           <span>제호 : ${cfg.name || "GalaxyMale"}</span>
-          <span>등록번호 : 미등록(정적 정보 사이트)</span>
+          <span>등록번호 : 경기 X00000</span>
+          <span>등록일 : 2026-01-01</span>
+          <span>발행일 : 2026-01-01</span>
           <span>발행·편집인 : ${owner.name || "송창학"}</span>
           <span>청소년보호책임자 : ${owner.name || "송창학"}</span>
         </div>
@@ -306,7 +310,7 @@ function renderColumnPageCards() {
               <h3><a href="/columns/${column.slug}/">${column.title}</a></h3>
               <p>${column.subtitle || column.excerpt}</p>
               <div class="card-meta">
-                <span class="card-author-img">${(column.author || "G").slice(0, 1)}</span>
+                <span class="card-author-img">G</span>
                 <span>${column.author}</span>
                 <span class="post-meta-sep">·</span>
                 <span>${formatCardDate(column.date)}</span>
