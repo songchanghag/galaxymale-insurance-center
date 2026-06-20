@@ -7,7 +7,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const posts = window.POSTS || [];
   const post = posts.find((item) => item.slug === slug);
   const main = document.getElementById("post-main");
-  if (!main) return;
+  if (!main) {
+    const staticArticle = document.querySelector(".news-article");
+    if (staticArticle && post) {
+      setupShareButtons(post, window.location.href);
+      setupLocalComments(post.slug);
+      injectArticleJsonLd(post);
+    }
+    return;
+  }
 
   if (!post) {
     main.innerHTML = `

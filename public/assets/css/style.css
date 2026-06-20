@@ -71,9 +71,10 @@ ul, ol { list-style: none; }
 }
 .site-logo:hover { color: var(--color-primary); text-decoration: none; }
 .logo-icon {
-  width: 36px; height: 36px; background: var(--color-primary);
+  width: 36px; height: 36px; background: var(--color-primary) url("/favicon.svg?v=20260107") center / cover no-repeat;
   border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 1rem; font-weight: 900;
+  color: transparent; font-size: 1rem; font-weight: 900;
+  overflow: hidden;
 }
 .site-nav { display: flex; align-items: center; gap: 4px; }
 .site-nav a {
@@ -231,9 +232,10 @@ ul, ol { list-style: none; }
 }
 .card-author-img {
   width: 26px; height: 26px; border-radius: 50%;
-  background: var(--color-primary); color: white;
+  background: var(--color-primary) url("/favicon.svg?v=20260107") center / cover no-repeat; color: transparent;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: .7rem; font-weight: 700; flex-shrink: 0;
+  overflow: hidden;
 }
 
 /* ── 카테고리 카드 ── */
@@ -305,9 +307,10 @@ ul, ol { list-style: none; }
 .column-author { display: flex; align-items: center; gap: 10px; }
 .column-author-img {
   width: 32px; height: 32px; border-radius: 50%;
-  background: var(--color-primary); color: white;
+  background: var(--color-primary) url("/favicon.svg?v=20260107") center / cover no-repeat; color: transparent;
   display: flex; align-items: center; justify-content: center;
   font-size: .8rem; font-weight: 700;
+  overflow: hidden;
 }
 .column-author-name { font-size: .82rem; font-weight: 700; color: var(--color-secondary); }
 .column-author-date { font-size: .75rem; color: var(--color-text-muted); }
@@ -388,9 +391,10 @@ ul, ol { list-style: none; }
 }
 .owner-avatar {
   width: 72px; height: 72px; border-radius: 50%;
-  background: var(--color-primary); border: 3px solid rgba(255,255,255,.34);
+  background: var(--color-primary) url("/favicon.svg?v=20260107") center / cover no-repeat; border: 3px solid rgba(255,255,255,.34);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.6rem; font-weight: 900; color: white;
+  font-size: 1.6rem; font-weight: 900; color: transparent;
+  overflow: hidden;
 }
 .owner-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
 .owner-role { font-size: .8rem; color: rgba(255,255,255,.7); margin-bottom: 10px; }
@@ -1236,10 +1240,11 @@ ul, ol { list-style: none; }
   width: 52px;
   height: 52px;
   border-radius: 999px;
-  background: #fff;
-  color: #1f2937;
+  background: #fff url("/favicon.svg?v=20260107") center / cover no-repeat;
+  color: transparent;
   font-size: 1.5rem;
   font-weight: 900;
+  overflow: hidden;
 }
 
 .footer-social {

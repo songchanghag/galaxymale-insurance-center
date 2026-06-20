@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   syncHomeHeroFromData();
   syncHomeCategoryCards();
   renderHomeArticleSections();
+  renderHomeColumnPreview();
   renderCategoryPageArticles();
   renderColumnPageCards();
   syncPostCardsFromData();
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function ensureBrandIcon() {
-  const iconHref = "/favicon.svg";
+  const iconHref = "/favicon.svg?v=20260107";
   let icon = document.querySelector('link[rel="icon"]');
   if (!icon) {
     icon = document.createElement("link");
@@ -39,7 +40,7 @@ function ensureBrandIcon() {
   if (!document.querySelector('link[rel="manifest"]')) {
     const manifest = document.createElement("link");
     manifest.rel = "manifest";
-    manifest.href = "/site.webmanifest";
+    manifest.href = "/site.webmanifest?v=20260107";
     document.head.appendChild(manifest);
   }
 }
@@ -87,7 +88,7 @@ function normalizeSiteChrome() {
           <span>제호 : ${cfg.name || "GalaxyMale"}</span>
           <span>등록번호 : 경기 X00000</span>
           <span>등록일 : 2026-01-01</span>
-          <span>발행일 : 2026-01-01</span>
+          <span>발행일 : 2026-01-07</span>
           <span>발행·편집인 : ${owner.name || "송창학"}</span>
           <span>청소년보호책임자 : ${owner.name || "송창학"}</span>
         </div>
@@ -322,6 +323,36 @@ function renderColumnPageCards() {
     </section>`;
 }
 
+function renderHomeColumnPreview() {
+  if (window.location.pathname !== "/" && window.location.pathname !== "/index.html") return;
+  const columns = window.COLUMNS || [];
+  const cards = document.querySelectorAll(".column-card");
+  if (!cards.length || !columns.length) return;
+
+  cards.forEach((card, index) => {
+    const column = columns[index];
+    if (!column) return;
+    const badge = card.querySelector(".column-badge");
+    const title = card.querySelector(".column-title a");
+    const excerpt = card.querySelector(".column-excerpt");
+    const icon = card.querySelector(".column-author-img");
+    const author = card.querySelector(".column-author-name a");
+    const date = card.querySelector(".column-author-date");
+    if (badge) badge.textContent = "COLUMN";
+    if (title) {
+      title.textContent = column.title;
+      title.href = `/columns/${column.slug}/`;
+    }
+    if (excerpt) excerpt.textContent = column.subtitle || column.excerpt || "";
+    if (icon) icon.textContent = "G";
+    if (author) {
+      author.textContent = column.author;
+      author.href = "/author/";
+    }
+    if (date) date.textContent = formatCardDate(column.date);
+  });
+}
+
 function renderFeaturedSide(post, number) {
   return `
     <a href="/posts/${post.slug}/" class="featured-side-card">
@@ -376,7 +407,7 @@ function updateCardMeta(card, post) {
   if (!meta) return;
 
   const authorIcon = meta.querySelector(".card-author-img");
-  if (authorIcon) authorIcon.textContent = (post.author || "편").slice(0, 1);
+  if (authorIcon) authorIcon.textContent = "G";
 
   const textSpans = Array.from(meta.querySelectorAll("span")).filter(function (span) {
     return !span.classList.contains("card-author-img") && !span.classList.contains("post-meta-sep");

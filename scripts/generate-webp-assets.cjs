@@ -7,156 +7,109 @@ const root = path.resolve(__dirname, "..");
 const dataPath = path.join(root, "public", "assets", "js", "data.js");
 const outArticles = path.join(root, "public", "assets", "images", "articles");
 const outColumns = path.join(root, "public", "assets", "images", "columns");
-
 fs.mkdirSync(outArticles, { recursive: true });
 fs.mkdirSync(outColumns, { recursive: true });
 
-const code = fs.readFileSync(dataPath, "utf8");
 const ctx = { window: {} };
 vm.createContext(ctx);
-vm.runInContext(code, ctx);
+vm.runInContext(fs.readFileSync(dataPath, "utf8"), ctx);
 
-const palettes = {
-  ai: ["#071526", "#0f62fe", "#38bdf8", "#dff7ff"],
-  smartphone: ["#111827", "#2563eb", "#22c55e", "#e0f2fe"],
-  pc: ["#101828", "#7c3aed", "#f472b6", "#eef2ff"],
-  internet: ["#06111f", "#0ea5e9", "#14b8a6", "#ecfeff"],
-  gadget: ["#1f1b2e", "#8b5cf6", "#f59e0b", "#fff7ed"],
-  column: ["#0f172a", "#0f62fe", "#f97316", "#f8fafc"]
+const scenes = {
+  "chatgpt-beginners-guide": { bg: ["#061b33", "#246bfe", "#38bdf8"], icon: "meeting", accent: "#90e7ff" },
+  "chatgpt-prompt-writing": { bg: ["#160f2e", "#6d28d9", "#f472b6"], icon: "flow", accent: "#f9a8d4" },
+  "ai-image-tools-comparison": { bg: ["#122018", "#16a34a", "#facc15"], icon: "canvas", accent: "#bbf7d0" },
+  "ai-daily-use-tips": { bg: ["#111827", "#0f766e", "#67e8f9"], icon: "summary", accent: "#99f6e4" },
+  "galaxy-vs-iphone-comparison": { bg: ["#0f172a", "#2563eb", "#a855f7"], icon: "phones", accent: "#bfdbfe" },
+  "smartphone-battery-tips": { bg: ["#052e16", "#22c55e", "#f97316"], icon: "battery", accent: "#dcfce7" },
+  "android-beginner-settings": { bg: ["#111827", "#0891b2", "#22c55e"], icon: "privacy", accent: "#cffafe" },
+  "mobile-app-management": { bg: ["#312e81", "#4f46e5", "#fb7185"], icon: "apps", accent: "#ddd6fe" },
+  "pc-assembly-beginners": { bg: ["#0f172a", "#334155", "#60a5fa"], icon: "desktop", accent: "#dbeafe" },
+  "pc-windows11-setup": { bg: ["#082f49", "#0284c7", "#7dd3fc"], icon: "windows", accent: "#e0f2fe" },
+  "pc-storage-guide": { bg: ["#1e1b4b", "#7c3aed", "#f59e0b"], icon: "storage", accent: "#ede9fe" },
+  "phishing-prevention-guide": { bg: ["#450a0a", "#dc2626", "#f97316"], icon: "warning", accent: "#fee2e2" },
+  "vpn-beginners-guide": { bg: ["#0c1426", "#0f766e", "#38bdf8"], icon: "tunnel", accent: "#ccfbf1" },
+  "public-wifi-safety": { bg: ["#172554", "#2563eb", "#22d3ee"], icon: "wifi", accent: "#dbeafe" },
+  "internet-security-basics": { bg: ["#020617", "#1d4ed8", "#14b8a6"], icon: "key", accent: "#e0f2fe" },
+  "wireless-earbuds-buying-guide": { bg: ["#2e1065", "#8b5cf6", "#f0abfc"], icon: "earbuds", accent: "#fae8ff" },
+  "gadget-smartwatch-guide": { bg: ["#431407", "#f97316", "#facc15"], icon: "watch", accent: "#ffedd5" },
+  "gadget-tablet-guide": { bg: ["#111827", "#475569", "#c084fc"], icon: "tablet", accent: "#f3e8ff" },
+  "ai-digital-literacy": { bg: ["#0f172a", "#0f62fe", "#38bdf8"], icon: "book", accent: "#dff7ff" },
+  "smartphone-decade-reflection": { bg: ["#172554", "#2563eb", "#22c55e"], icon: "timeline", accent: "#dcfce7" },
+  "tech-purchase-beyond-specs": { bg: ["#1c1917", "#ea580c", "#facc15"], icon: "checklist", accent: "#ffedd5" }
 };
 
 function esc(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+  return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
-function hash(value) {
-  return Array.from(value).reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 7);
+function titleLines(text) {
+  const words = String(text).split(" ");
+  const lines = ["", ""];
+  for (const word of words) {
+    const target = lines[0].length < 22 ? 0 : 1;
+    if ((lines[target] + " " + word).trim().length <= 30) lines[target] = (lines[target] + " " + word).trim();
+  }
+  return lines.filter(Boolean).map(esc);
 }
 
-function icon(category, seed) {
-  const n = hash(seed) % 5;
-  if (category === "ai") {
-    return `
-      <circle cx="650" cy="315" r="128" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="3"/>
-      ${Array.from({ length: 16 }).map((_, i) => {
-        const a = (Math.PI * 2 * i) / 16;
-        const x = 650 + Math.cos(a) * (94 + (i % 3) * 18);
-        const y = 315 + Math.sin(a) * (76 + (i % 4) * 12);
-        return `<line x1="650" y1="315" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.22)" stroke-width="2"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${5 + (i % 3)}" fill="rgba(255,255,255,.82)"/>`;
-      }).join("")}
-      <path d="M596 302c0-42 34-76 76-76 36 0 66 25 74 58 29 6 50 31 50 62 0 35-29 64-64 64H608c-33 0-60-27-60-60 0-24 14-45 34-55 5-2 9-4 14-5z" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.48)" stroke-width="3"/>
-      <rect x="245" y="350" width="220" height="132" rx="18" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.34)"/>
-      <rect x="270" y="376" width="170" height="18" rx="9" fill="rgba(255,255,255,.55)"/>
-      <rect x="270" y="410" width="${120 + n * 10}" height="14" rx="7" fill="rgba(56,189,248,.72)"/>`;
-  }
-  if (category === "smartphone") {
-    return `
-      <rect x="520" y="120" width="178" height="360" rx="38" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.42)" stroke-width="4"/>
-      <rect x="545" y="166" width="128" height="250" rx="22" fill="rgba(255,255,255,.08)"/>
-      <circle cx="610" cy="440" r="14" fill="rgba(255,255,255,.62)"/>
-      <path d="M760 250c52 40 52 104 0 144M800 220c84 64 84 158 0 222" fill="none" stroke="rgba(34,197,94,.7)" stroke-width="16" stroke-linecap="round"/>
-      <rect x="250" y="325" width="130" height="90" rx="18" fill="rgba(255,255,255,.18)"/>
-      <circle cx="280" cy="354" r="13" fill="rgba(255,255,255,.72)"/>
-      <circle cx="322" cy="354" r="13" fill="rgba(255,255,255,.44)"/>
-      <circle cx="340" cy="390" r="14" fill="rgba(255,255,255,.34)"/>`;
-  }
-  if (category === "pc") {
-    return `
-      <rect x="245" y="180" width="340" height="215" rx="18" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.38)" stroke-width="4"/>
-      <rect x="282" y="220" width="266" height="136" rx="8" fill="rgba(15,23,42,.42)"/>
-      <path d="M380 410h70l18 52H362z" fill="rgba(255,255,255,.22)"/>
-      <rect x="330" y="462" width="190" height="22" rx="11" fill="rgba(255,255,255,.22)"/>
-      <rect x="690" y="190" width="185" height="276" rx="24" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.34)" stroke-width="3"/>
-      ${Array.from({ length: 5 }).map((_, i) => `<rect x="720" y="${225 + i * 42}" width="${96 + (i % 3) * 18}" height="13" rx="6" fill="rgba(255,255,255,${.72 - i * .08})"/>`).join("")}
-      <circle cx="790" cy="420" r="18" fill="rgba(244,114,182,.75)"/>`;
-  }
-  if (category === "internet") {
-    return `
-      <path d="M600 160l205 76v112c0 112-78 172-205 220-127-48-205-108-205-220V236z" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.4)" stroke-width="4"/>
-      <rect x="540" y="306" width="122" height="96" rx="16" fill="rgba(255,255,255,.22)"/>
-      <path d="M565 306v-35c0-43 70-43 70 0v35" fill="none" stroke="rgba(255,255,255,.72)" stroke-width="14" stroke-linecap="round"/>
-      <circle cx="601" cy="350" r="12" fill="#0f172a"/>
-      ${Array.from({ length: 18 }).map((_, i) => {
-        const x = 190 + ((i * 67) % 820);
-        const y = 145 + ((i * 91) % 370);
-        return `<circle cx="${x}" cy="${y}" r="${4 + (i % 4)}" fill="rgba(236,254,255,.7)"/>`;
-      }).join("")}`;
-  }
-  return `
-    <rect x="238" y="270" width="182" height="124" rx="42" fill="rgba(255,255,255,.17)" stroke="rgba(255,255,255,.36)" stroke-width="4"/>
-    <circle cx="292" cy="332" r="34" fill="rgba(255,255,255,.28)"/>
-    <circle cx="365" cy="332" r="34" fill="rgba(255,255,255,.42)"/>
-    <rect x="535" y="170" width="170" height="300" rx="34" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.36)" stroke-width="4"/>
-    <circle cx="620" cy="430" r="12" fill="rgba(255,255,255,.62)"/>
-    <rect x="790" y="220" width="150" height="220" rx="28" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.32)" stroke-width="3"/>
-    <path d="M260 492c180-120 370-120 680-20" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="4"/>`;
+function iconSvg(kind, accent) {
+  const a = accent;
+  const white = "rgba(255,255,255,.88)";
+  const soft = "rgba(255,255,255,.20)";
+  const line = "rgba(255,255,255,.48)";
+  const commonNodes = Array.from({ length: 16 }).map((_, i) => `<circle cx="${150 + (i * 67) % 820}" cy="${95 + (i * 89) % 330}" r="${2 + i % 4}" fill="rgba(255,255,255,.42)"/>`).join("");
+  const map = {
+    meeting: `<rect x="250" y="150" width="320" height="210" rx="22" fill="${soft}" stroke="${line}"/><rect x="285" y="190" width="160" height="18" rx="9" fill="${white}"/><rect x="285" y="232" width="220" height="14" rx="7" fill="${a}"/><circle cx="690" cy="250" r="88" fill="${soft}" stroke="${line}"/><path d="M650 250h80M690 210v80" stroke="${white}" stroke-width="12" stroke-linecap="round"/>`,
+    flow: `<path d="M260 170h190v86H260zM520 145h210v110H520zM360 340h260v94H360z" fill="${soft}" stroke="${line}" stroke-width="4"/><path d="M450 210h70M625 255v85M470 340l-55-84" stroke="${a}" stroke-width="12" fill="none" stroke-linecap="round"/><circle cx="450" cy="210" r="12" fill="${white}"/><circle cx="625" cy="255" r="12" fill="${white}"/><circle cx="470" cy="340" r="12" fill="${white}"/>`,
+    canvas: `<rect x="250" y="125" width="430" height="280" rx="24" fill="${soft}" stroke="${line}" stroke-width="4"/><circle cx="345" cy="215" r="48" fill="${a}"/><path d="M282 365c70-92 122-110 190-28 34-46 74-58 148 28" fill="none" stroke="${white}" stroke-width="18" stroke-linecap="round"/><rect x="720" y="175" width="70" height="210" rx="35" fill="${white}" opacity=".75"/>`,
+    summary: `<rect x="245" y="140" width="360" height="300" rx="22" fill="${soft}" stroke="${line}" stroke-width="4"/><rect x="292" y="190" width="230" height="20" rx="10" fill="${white}"/><rect x="292" y="245" width="270" height="16" rx="8" fill="${a}"/><rect x="292" y="292" width="190" height="16" rx="8" fill="${white}" opacity=".66"/><circle cx="760" cy="265" r="88" fill="${soft}" stroke="${line}"/><path d="M720 265l32 32 70-78" fill="none" stroke="${a}" stroke-width="18" stroke-linecap="round"/>`,
+    phones: `<rect x="300" y="120" width="150" height="330" rx="32" fill="${soft}" stroke="${line}" stroke-width="5"/><rect x="570" y="120" width="150" height="330" rx="32" fill="${soft}" stroke="${line}" stroke-width="5"/><circle cx="375" cy="408" r="14" fill="${white}"/><circle cx="645" cy="408" r="14" fill="${white}"/><path d="M490 250h38M490 292h38" stroke="${a}" stroke-width="12" stroke-linecap="round"/>`,
+    battery: `<rect x="290" y="205" width="430" height="160" rx="28" fill="${soft}" stroke="${line}" stroke-width="5"/><rect x="720" y="250" width="42" height="70" rx="12" fill="${line}"/><rect x="320" y="235" width="250" height="100" rx="18" fill="${a}"/><path d="M610 238l-50 70h64l-42 82" stroke="${white}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+    privacy: `<path d="M510 120l220 78v126c0 110-83 170-220 218-137-48-220-108-220-218V198z" fill="${soft}" stroke="${line}" stroke-width="5"/><rect x="452" y="292" width="116" height="92" rx="16" fill="${white}" opacity=".75"/><path d="M475 292v-40c0-46 70-46 70 0v40" stroke="${a}" stroke-width="16" fill="none" stroke-linecap="round"/>`,
+    apps: `<g fill="${soft}" stroke="${line}" stroke-width="4">${[0,1,2].map(r=>[0,1,2].map(c=>`<rect x="${310+c*120}" y="${145+r*105}" width="78" height="78" rx="20"/>`).join("")).join("")}</g><circle cx="690" cy="255" r="84" fill="${a}" opacity=".85"/><path d="M650 255h80M690 215v80" stroke="${white}" stroke-width="14" stroke-linecap="round"/>`,
+    desktop: `<rect x="250" y="135" width="440" height="270" rx="20" fill="${soft}" stroke="${line}" stroke-width="5"/><rect x="306" y="190" width="330" height="155" rx="12" fill="rgba(15,23,42,.35)"/><path d="M430 405h80l22 70H408z" fill="${soft}"/><rect x="360" y="470" width="220" height="24" rx="12" fill="${line}"/>`,
+    windows: `<path d="M300 150l185-28v170H300zM505 119l215-32v205H505zM300 315h185v170l-185-28zM505 315h215v205l-215-32z" fill="${soft}" stroke="${line}" stroke-width="4"/>`,
+    storage: `<rect x="300" y="150" width="420" height="290" rx="36" fill="${soft}" stroke="${line}" stroke-width="5"/><circle cx="372" cy="222" r="30" fill="${a}"/><rect x="430" y="204" width="210" height="16" rx="8" fill="${white}"/><rect x="350" y="300" width="320" height="18" rx="9" fill="${white}" opacity=".55"/><rect x="350" y="350" width="250" height="18" rx="9" fill="${a}"/>`,
+    warning: `<path d="M510 120l260 420H250z" fill="${soft}" stroke="${line}" stroke-width="6"/><path d="M510 245v135" stroke="${a}" stroke-width="22" stroke-linecap="round"/><circle cx="510" cy="430" r="16" fill="${white}"/>`,
+    tunnel: `<ellipse cx="520" cy="280" rx="230" ry="155" fill="${soft}" stroke="${line}" stroke-width="5"/><ellipse cx="520" cy="280" rx="122" ry="78" fill="rgba(15,23,42,.32)" stroke="${a}" stroke-width="10"/><path d="M275 280H150M890 280H765" stroke="${white}" stroke-width="18" stroke-linecap="round"/>`,
+    wifi: `<path d="M300 260c130-110 310-110 440 0M370 330c88-72 212-72 300 0M450 400c42-32 98-32 140 0" fill="none" stroke="${white}" stroke-width="20" stroke-linecap="round"/><circle cx="520" cy="462" r="22" fill="${a}"/>`,
+    key: `<circle cx="395" cy="285" r="92" fill="${soft}" stroke="${line}" stroke-width="5"/><circle cx="395" cy="285" r="34" fill="rgba(15,23,42,.32)"/><path d="M487 285h260M650 285v55M720 285v75" stroke="${a}" stroke-width="22" stroke-linecap="round"/>`,
+    earbuds: `<path d="M345 190c-62 0-100 50-100 114 0 54 34 90 78 90 32 0 52-22 52-54v-88c0-36-8-62-30-62zM690 190c62 0 100 50 100 114 0 54-34 90-78 90-32 0-52-22-52-54v-88c0-36 8-62 30-62z" fill="${soft}" stroke="${line}" stroke-width="5"/><path d="M375 410v74M660 410v74" stroke="${a}" stroke-width="18" stroke-linecap="round"/>`,
+    watch: `<rect x="418" y="170" width="210" height="250" rx="54" fill="${soft}" stroke="${line}" stroke-width="6"/><path d="M464 170v-72h118v72M464 420v72h118v-72" fill="${soft}" stroke="${line}" stroke-width="5"/><circle cx="523" cy="295" r="58" fill="rgba(15,23,42,.32)"/><path d="M523 255v45l38 28" stroke="${a}" stroke-width="12" stroke-linecap="round"/>`,
+    tablet: `<rect x="275" y="125" width="510" height="330" rx="34" fill="${soft}" stroke="${line}" stroke-width="6"/><rect x="325" y="178" width="380" height="220" rx="18" fill="rgba(15,23,42,.28)"/><path d="M745 155l70-70M785 195l70-70" stroke="${a}" stroke-width="14" stroke-linecap="round"/>`,
+    book: `<path d="M275 160h230c56 0 86 30 86 86v245c0-44-30-70-86-70H275zM591 246c0-56 30-86 86-86h230v261H677c-56 0-86 26-86 70z" fill="${soft}" stroke="${line}" stroke-width="5"/><path d="M330 220h130M330 270h110M680 220h130M680 270h150" stroke="${a}" stroke-width="14" stroke-linecap="round"/>`,
+    timeline: `<path d="M230 330h620" stroke="${white}" stroke-width="12" stroke-linecap="round"/><circle cx="310" cy="330" r="42" fill="${a}"/><circle cx="520" cy="330" r="42" fill="${soft}" stroke="${line}" stroke-width="5"/><circle cx="730" cy="330" r="42" fill="${soft}" stroke="${line}" stroke-width="5"/><path d="M310 250v-70M520 410v70M730 250v-70" stroke="${line}" stroke-width="10"/>`,
+    checklist: `<rect x="285" y="135" width="470" height="330" rx="28" fill="${soft}" stroke="${line}" stroke-width="5"/><path d="M350 220l28 28 56-68M350 315l28 28 56-68" stroke="${a}" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M480 215h190M480 310h160" stroke="${white}" stroke-width="16" stroke-linecap="round"/>`
+  };
+  return commonNodes + (map[kind] || map.summary);
 }
 
-function svgFor(item, type, index) {
-  const category = type === "column" ? "column" : item.category;
-  const [bg, c1, c2, paper] = palettes[category] || palettes.column;
-  const seed = `${item.slug}-${index}`;
-  const h = hash(seed);
-  const title = esc(item.title);
-  const label = esc(type === "column" ? "COLUMN" : item.categoryName || category);
+function svgFor(item, type) {
+  const scene = scenes[item.slug] || scenes["chatgpt-beginners-guide"];
+  const [bg1, bg2, bg3] = scene.bg;
+  const lines = titleLines(item.title);
+  const label = type === "column" ? "COLUMN" : item.categoryName;
   const subtitle = esc(item.subtitle || item.excerpt || "GalaxyMale");
-  const shortTitle = title.length > 31 ? `${title.slice(0, 31)}...` : title;
-  const shortSub = subtitle.length > 46 ? `${subtitle.slice(0, 46)}...` : subtitle;
-  const angle = 20 + (h % 35);
-  return `
-  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="${bg}"/>
-        <stop offset=".56" stop-color="${c1}"/>
-        <stop offset="1" stop-color="${c2}"/>
-      </linearGradient>
-      <radialGradient id="glow" cx=".72" cy=".28" r=".62">
-        <stop offset="0" stop-color="rgba(255,255,255,.42)"/>
-        <stop offset="1" stop-color="rgba(255,255,255,0)"/>
-      </radialGradient>
-      <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#020617" flood-opacity=".28"/></filter>
-    </defs>
-    <rect width="1200" height="675" fill="url(#bg)"/>
-    <rect width="1200" height="675" fill="url(#glow)"/>
-    <g opacity=".24">
-      ${Array.from({ length: 9 }).map((_, i) => `<path d="M${-120 + i * 170} 690L${220 + i * 170} -20" stroke="rgba(255,255,255,.55)" stroke-width="${1 + (i % 3)}"/>`).join("")}
-      ${Array.from({ length: 42 }).map((_, i) => {
-        const x = (h + i * 83) % 1200;
-        const y = (h * 3 + i * 47) % 675;
-        return `<circle cx="${x}" cy="${y}" r="${2 + (i % 5)}" fill="rgba(255,255,255,.45)"/>`;
-      }).join("")}
-    </g>
-    <g filter="url(#shadow)" transform="rotate(${(h % 2 ? 1 : -1) * angle / 18} 600 330)">
-      ${icon(category, seed)}
-    </g>
-    <rect x="74" y="470" width="790" height="128" rx="26" fill="rgba(15,23,42,.48)" stroke="rgba(255,255,255,.16)"/>
-    <text x="104" y="512" font-family="Arial, sans-serif" font-size="26" font-weight="800" fill="${paper}">${label}</text>
-    <text x="104" y="555" font-family="Arial, sans-serif" font-size="34" font-weight="900" fill="#ffffff">${shortTitle}</text>
-    <text x="104" y="585" font-family="Arial, sans-serif" font-size="19" font-weight="500" fill="rgba(255,255,255,.76)">${shortSub}</text>
-    <circle cx="1060" cy="112" r="54" fill="rgba(255,255,255,.92)"/>
-    <text x="1060" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="900" fill="${c1}">G</text>
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+    <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${bg1}"/><stop offset=".55" stop-color="${bg2}"/><stop offset="1" stop-color="${bg3}"/></linearGradient><radialGradient id="glow" cx=".72" cy=".18" r=".7"><stop stop-color="rgba(255,255,255,.42)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient><filter id="shadow"><feDropShadow dx="0" dy="22" stdDeviation="26" flood-color="#020617" flood-opacity=".35"/></filter></defs>
+    <rect width="1200" height="675" fill="url(#bg)"/><rect width="1200" height="675" fill="url(#glow)"/>
+    <g opacity=".22">${Array.from({ length: 10 }).map((_, i) => `<path d="M${-200 + i * 160} 700L${220 + i * 170} -40" stroke="rgba(255,255,255,.55)" stroke-width="${1 + i % 3}"/>`).join("")}</g>
+    <g filter="url(#shadow)">${iconSvg(scene.icon, scene.accent)}</g>
+    <rect x="72" y="470" width="800" height="128" rx="26" fill="rgba(2,6,23,.52)" stroke="rgba(255,255,255,.16)"/>
+    <text x="104" y="510" font-family="Arial, sans-serif" font-size="24" font-weight="900" fill="${scene.accent}">${esc(label)}</text>
+    ${lines.map((line, i) => `<text x="104" y="${552 + i * 35}" font-family="Arial, sans-serif" font-size="31" font-weight="900" fill="#ffffff">${line}</text>`).join("")}
+    <text x="104" y="623" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="rgba(255,255,255,.72)">${subtitle.slice(0, 50)}</text>
+    <image href="/favicon.svg?v=20260107" x="1032" y="72" width="92" height="92"/>
   </svg>`;
 }
 
-async function writeWebp(item, type, index) {
-  const dir = type === "column" ? outColumns : outArticles;
-  const svg = Buffer.from(svgFor(item, type, index));
-  const file = path.join(dir, `${item.slug}.webp`);
-  await sharp(svg).webp({ quality: 84 }).toFile(file);
-  return file;
+async function writeWebp(item, type) {
+  const file = path.join(type === "column" ? outColumns : outArticles, `${item.slug}.webp`);
+  await sharp(Buffer.from(svgFor(item, type))).webp({ quality: 92, effort: 6 }).toFile(file);
 }
 
 (async () => {
-  for (let i = 0; i < ctx.window.POSTS.length; i += 1) {
-    await writeWebp(ctx.window.POSTS[i], "article", i);
-  }
-  for (let i = 0; i < ctx.window.COLUMNS.length; i += 1) {
-    await writeWebp(ctx.window.COLUMNS[i], "column", i);
-  }
-  console.log(`Generated ${ctx.window.POSTS.length + ctx.window.COLUMNS.length} WebP assets.`);
+  for (const item of ctx.window.POSTS) await writeWebp(item, "article");
+  for (const item of ctx.window.COLUMNS) await writeWebp(item, "column");
+  console.log(`Generated ${ctx.window.POSTS.length + ctx.window.COLUMNS.length} high-quality WebP assets.`);
 })();

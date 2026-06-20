@@ -540,6 +540,27 @@ const ARTICLE_OUTLINES = {
   ]
 };
 
+const ARTICLE_FINAL_HEADINGS = {
+  "chatgpt-beginners-guide": "회의록을 남기기 전에 다시 볼 항목",
+  "chatgpt-prompt-writing": "좋은 질문을 만들 때 남는 기준",
+  "ai-image-tools-comparison": "이미지 활용 전 분리해야 할 정보",
+  "ai-daily-use-tips": "요약문을 읽은 뒤 확인할 원문 단서",
+  "galaxy-vs-iphone-comparison": "기기 선택 전에 남겨둘 생활 질문",
+  "smartphone-battery-tips": "충전 습관보다 먼저 볼 사용 환경",
+  "android-beginner-settings": "새 휴대폰 첫날 놓치기 쉬운 설정",
+  "mobile-app-management": "앱 정리 후에도 확인할 결제 흐름",
+  "pc-assembly-beginners": "첫 조립 PC에서 끝까지 남는 조건",
+  "pc-windows11-setup": "초기 설정 뒤 바로 점검할 백업 경로",
+  "pc-storage-guide": "저장장치 선택 전에 그려볼 파일 이동",
+  "phishing-prevention-guide": "문자 링크 앞에서 멈춰야 할 순간",
+  "vpn-beginners-guide": "VPN 사용 전에 구분해야 할 보호 범위",
+  "public-wifi-safety": "자동 연결을 끄기 전에 살펴볼 목록",
+  "internet-security-basics": "계정을 잃었을 때 돌아오는 길",
+  "wireless-earbuds-buying-guide": "통화 품질을 확인할 실제 장소",
+  "gadget-smartwatch-guide": "손목 위 숫자를 읽는 적당한 거리",
+  "gadget-tablet-guide": "태블릿을 가장 자주 놓을 자리"
+};
+
 function articleBody(item, index) {
   const outline = ARTICLE_OUTLINES[item.slug];
   if (outline) {
@@ -557,7 +578,7 @@ function articleBody(item, index) {
       '<p class="news-lead">' + item.scene + ' ' + item.shift + '</p>',
       '<div class="news-key-points"><strong>핵심 요약</strong><ul><li>' + item.impact + '</li><li>' + item.caution + '</li></ul></div>',
       sections,
-      '<h2>독자가 남겨둘 질문</h2>',
+      '<h2>' + (ARTICLE_FINAL_HEADINGS[item.slug] || "마지막으로 확인할 기준") + '</h2>',
       '<p>' + item.close + '</p>',
       '<p>' + item.detail + '</p>',
       '<p>' + item.scene + ' ' + item.conflict + '</p>',

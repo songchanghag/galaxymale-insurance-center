@@ -3,7 +3,7 @@
   "short_name": "GalaxyMale",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/favicon.svg?v=20260107",
       "sizes": "any",
       "type": "image/svg+xml"
     }
