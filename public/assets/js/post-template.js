@@ -1,5 +1,5 @@
 /* ================================================================
-   GalaxyMale Tech article renderer
+   GalaxyMale article renderer
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  document.title = `${post.title} | GalaxyMale Tech`;
+  document.title = `${post.title} | GalaxyMale`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute("content", post.subtitle || post.excerpt || post.title);
   injectArticleJsonLd(post);
@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const popularPosts = posts
     .filter((item) => item.recommended && item.slug !== post.slug)
     .slice(0, 5);
+
+  const sidebarPosts = buildSidebarRecommendations(post, posts, relatedPosts, latestPosts, popularPosts);
 
   const categoryItems = window.CATEGORIES || [];
   const url = window.location.href;
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ${post.image ? `
             <figure class="news-cover">
               <img src="${post.image}" alt="${post.imageAlt || post.title}" loading="eager">
-              <figcaption>${post.categoryName} 기사 이미지 / GalaxyMale Tech</figcaption>
+              <figcaption>${post.categoryName} 기사 이미지 / GalaxyMale</figcaption>
             </figure>
           ` : ""}
 
@@ -101,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
           </section>
 
           <footer class="news-article-footer">
-            <p>이 기사는 GalaxyMale Tech 편집 기준에 따라 작성되었으며, 제품·서비스 정보는 이용 환경과 시점에 따라 달라질 수 있습니다.</p>
+            <p>이 기사는 GalaxyMale 편집 기준에 따라 작성되었으며, 제품·서비스 정보는 이용 환경과 시점에 따라 달라질 수 있습니다.</p>
             <p>운영 과정에서 내용은 순차적으로 보완될 수 있으며, 문의는 <a href="/contact/">문의하기</a> 페이지의 이메일 경로를 이용해 주세요.</p>
           </footer>
 
@@ -109,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="news-editor-avatar">${(post.author || "G").slice(0, 1)}</div>
             <div>
               <h2>${post.author || "GalaxyMale 편집부"} ${post.authorRole || "기자"}</h2>
-              <p>GalaxyMale Tech는 기술 정보를 생활 속 선택 기준으로 풀어 쓰는 것을 목표로 합니다. 운영자 <a href="/author/">송창학</a>의 편집 원칙에 따라 과장된 표현과 확인되지 않은 최신성을 피합니다.</p>
+              <p>GalaxyMale는 기술 정보를 생활 속 선택 기준으로 풀어 쓰는 것을 목표로 합니다. 운영자 <a href="/author/">송창학</a>의 편집 원칙에 따라 과장된 표현과 확인되지 않은 최신성을 피합니다.</p>
             </div>
           </section>
 
@@ -127,13 +129,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <aside class="news-sidebar" aria-label="사이드바">
           <section class="news-side-box">
-            <h2>최신 콘텐츠</h2>
-            ${latestPosts.map(renderSidePost).join("")}
-          </section>
-
-          <section class="news-side-box">
             <h2>추천 콘텐츠</h2>
-            ${(popularPosts.length ? popularPosts : latestPosts).slice(0, 5).map(renderSidePost).join("")}
+            ${sidebarPosts.map(renderSidePost).join("")}
           </section>
 
           <section class="news-side-box">
@@ -166,6 +163,26 @@ function renderRelatedCard(post) {
       <strong>${post.title}</strong>
       <time datetime="${post.date}">${formatDate(post.date)}</time>
     </a>`;
+}
+
+function buildSidebarRecommendations(currentPost, posts, relatedPosts, latestPosts, popularPosts) {
+  const sameCategory = posts
+    .filter((item) => item.slug !== currentPost.slug && item.category === currentPost.category)
+    .sort((a, b) => String(b.updated || b.date).localeCompare(String(a.updated || a.date)));
+
+  const pool = [
+    ...relatedPosts,
+    ...sameCategory,
+    ...popularPosts,
+    ...latestPosts
+  ];
+
+  const seen = new Set([currentPost.slug]);
+  return pool.filter((item) => {
+    if (!item || seen.has(item.slug)) return false;
+    seen.add(item.slug);
+    return true;
+  }).slice(0, 6);
 }
 
 function renderSidePost(post) {
@@ -267,7 +284,7 @@ function injectArticleJsonLd(post) {
         "datePublished": post.date,
         "dateModified": post.updated || post.date,
         "author": { "@type": "Person", "name": post.author || cfg.owner?.name || "GalaxyMale 편집부" },
-        "publisher": { "@type": "Organization", "name": cfg.name || "GalaxyMale Tech", "url": cfg.url || "https://galaxymale.com" },
+        "publisher": { "@type": "Organization", "name": cfg.name || "GalaxyMale", "url": cfg.url || "https://galaxymale.com" },
         "mainEntityOfPage": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/`,
         "inLanguage": "ko-KR"
       },

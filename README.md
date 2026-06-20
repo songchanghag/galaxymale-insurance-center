@@ -1,4 +1,4 @@
-# GalaxyMale Tech Static Site
+# GalaxyMale Static Site
 
 This repository deploys the static `public/` site to Cloudflare Workers Static Assets for `galaxymale.com`.
 

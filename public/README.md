@@ -1,4 +1,4 @@
-# GalaxyMale Tech — 한국어 테크 뉴스 사이트
+# GalaxyMale — 한국어 테크 뉴스 사이트
 
 **도메인:** galaxymale.com  
 **운영자:** 송창학 (songchanghag790@gmail.com)  
@@ -9,7 +9,7 @@
 
 ## 사이트 개요
 
-GalaxyMale Tech는 AI, 스마트폰, PC, 인터넷 보안, IT 가젯 분야의 실용적인 테크 정보를 제공하는 순수 정적(Static) HTML/CSS/JavaScript 사이트입니다.
+GalaxyMale는 AI, 스마트폰, PC, 인터넷 보안, IT 가젯 분야의 실용적인 테크 정보를 제공하는 순수 정적(Static) HTML/CSS/JavaScript 사이트입니다.
 
 ---
 
@@ -140,4 +140,4 @@ server {
 
 ---
 
-© 2026 GalaxyMale Tech | 운영자: 송창학
+© 2026 GalaxyMale | 운영자: 송창학

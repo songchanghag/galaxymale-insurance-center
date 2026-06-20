@@ -1,17 +1,48 @@
 /* ================================================================
-   GalaxyMale Tech common scripts
+   GalaxyMale common scripts
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
+  ensureBrandIcon();
   normalizeSiteChrome();
   setupMobileMenu();
   markActiveNavigation();
   setupContactForm();
   syncHomeHeroFromData();
+  syncHomeCategoryCards();
   renderHomeArticleSections();
+  renderCategoryPageArticles();
+  renderColumnPageCards();
   syncPostCardsFromData();
   setupReadingProgress();
 });
+
+function ensureBrandIcon() {
+  const iconHref = "/favicon.svg";
+  let icon = document.querySelector('link[rel="icon"]');
+  if (!icon) {
+    icon = document.createElement("link");
+    icon.rel = "icon";
+    document.head.appendChild(icon);
+  }
+  icon.type = "image/svg+xml";
+  icon.href = iconHref;
+
+  let shortcut = document.querySelector('link[rel="shortcut icon"]');
+  if (!shortcut) {
+    shortcut = document.createElement("link");
+    shortcut.rel = "shortcut icon";
+    document.head.appendChild(shortcut);
+  }
+  shortcut.href = iconHref;
+
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const manifest = document.createElement("link");
+    manifest.rel = "manifest";
+    manifest.href = "/site.webmanifest";
+    document.head.appendChild(manifest);
+  }
+}
 
 function normalizeSiteChrome() {
   const cfg = window.SITE_CONFIG || {};
@@ -32,7 +63,7 @@ function normalizeSiteChrome() {
     footer.innerHTML = `
       <div class="container">
         <div class="footer-news-brand">
-          <a href="/" class="footer-news-logo"><span>G</span>${cfg.name || "GalaxyMale Tech"}</a>
+          <a href="/" class="footer-news-logo"><span>G</span>${cfg.name || "GalaxyMale"}</a>
           <div class="footer-social" aria-label="소셜 링크">
             <a href="#" aria-label="Facebook">f</a>
             <a href="#" aria-label="Instagram">◎</a>
@@ -44,19 +75,20 @@ function normalizeSiteChrome() {
           <a href="/privacy/">개인정보처리방침</a>
           <a href="/terms/">이용약관</a>
           <a href="/policy/">저작권보호정책</a>
-          <a href="/disclaimer/">청소년보호정책</a>
-          <a href="mailto:${owner.email || ""}">이메일무단수집거부</a>
+          <a href="/youth/">청소년보호정책</a>
+          <a href="/email-rejection/">이메일무단수집거부</a>
+          <a href="/disclaimer/">면책고지</a>
         </div>
         <div class="footer-news-meta">
           <span>주소 : ${owner.address || "서울특별시 강남구 테헤란로 131"}</span>
           <span>대표전화 : ${owner.phone || "0507-2834-7925"}</span>
-          <span>제호 : ${cfg.name || "GalaxyMale Tech"}</span>
+          <span>제호 : ${cfg.name || "GalaxyMale"}</span>
           <span>등록번호 : 미등록(정적 정보 사이트)</span>
           <span>발행·편집인 : ${owner.name || "송창학"}</span>
           <span>청소년보호책임자 : ${owner.name || "송창학"}</span>
         </div>
         <div class="footer-news-contact">문의 : <a href="mailto:${owner.email || ""}">${owner.email || ""}</a></div>
-        <div class="footer-news-copy">Copyright © 2026 ${cfg.name || "GalaxyMale Tech"}. All rights reserved.</div>
+        <div class="footer-news-copy">Copyright © 2026 ${cfg.name || "GalaxyMale"}. All rights reserved.</div>
       </div>`;
   }
 }
@@ -153,6 +185,37 @@ function renderHomeArticleSections() {
   }
 }
 
+function syncHomeCategoryCards() {
+  const categoryImages = {
+    ai: "/assets/images/articles/ai-news.webp",
+    smartphone: "/assets/images/articles/mobile-news.webp",
+    pc: "/assets/images/articles/pc-news.webp",
+    internet: "/assets/images/articles/security-news.webp",
+    gadget: "/assets/images/articles/gadget-news.webp"
+  };
+  const categories = window.CATEGORIES || [];
+  const posts = window.POSTS || [];
+  const cards = document.querySelectorAll(".cat-card");
+  if (!cards.length || !categories.length) return;
+
+  cards.forEach((card) => {
+    const slug = (card.getAttribute("href") || "").split("/").filter(Boolean).pop();
+    const category = categories.find((item) => item.slug === slug);
+    if (!category) return;
+    const count = posts.filter((post) => post.category === slug).length || category.count || 0;
+    const icon = card.querySelector(".cat-icon");
+    const name = card.querySelector(".cat-name");
+    const countNode = card.querySelector(".cat-count");
+
+    if (icon) {
+      icon.classList.add("cat-image");
+      icon.innerHTML = `<img src="${categoryImages[slug]}" alt="${category.name} 대표 이미지" loading="lazy">`;
+    }
+    if (name) name.textContent = category.name;
+    if (countNode) countNode.textContent = `${count}개 기사`;
+  });
+}
+
 function syncPostCardsFromData() {
   const posts = window.POSTS || [];
   if (!posts.length) return;
@@ -185,6 +248,74 @@ function renderArticleCard(post, large) {
         </div>
       </div>
     </div>`;
+}
+
+function renderCategoryPageArticles() {
+  const path = window.location.pathname;
+  const match = path.match(/^\/categories\/([^/]+)\/?$/);
+  if (!match || match[1] === "categories") return;
+
+  const categorySlug = match[1];
+  const posts = (window.POSTS || []).filter((post) => post.category === categorySlug);
+  const main = document.querySelector("main.container");
+  const grid = main?.querySelector("div[style*='grid-template-columns']");
+  if (!grid || !posts.length) return;
+
+  grid.classList.add("cards-grid-3");
+  grid.removeAttribute("style");
+  grid.innerHTML = posts
+    .sort((a, b) => String(b.updated || b.date).localeCompare(String(a.updated || a.date)))
+    .map((post) => renderArticleCard(post, false))
+    .join("");
+}
+
+function renderColumnPageCards() {
+  const path = window.location.pathname;
+  if (path !== "/columns/" && path !== "/columns/index.html") return;
+
+  const columns = window.COLUMNS || [];
+  const main = document.querySelector("main.container");
+  if (!main || !columns.length) return;
+
+  main.innerHTML = `
+    <section class="column-list-section">
+      <h2>칼럼 필진</h2>
+      <div class="column-author-grid">
+        ${columns.map((column) => `
+          <article class="column-author-card">
+            <img src="${column.image}" alt="${column.imageAlt || column.title}" loading="lazy">
+            <div>
+              <span>COLUMN</span>
+              <h3>${column.author}</h3>
+              <p>${column.excerpt}</p>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+    <section class="column-list-section">
+      <h2>전체 칼럼</h2>
+      <div class="column-news-grid">
+        ${columns.map((column) => `
+          <article class="column-news-card">
+            <a href="/columns/${column.slug}/">
+              <img src="${column.image}" alt="${column.imageAlt || column.title}" loading="lazy">
+            </a>
+            <div class="column-news-body">
+              <span>COLUMN</span>
+              <h3><a href="/columns/${column.slug}/">${column.title}</a></h3>
+              <p>${column.subtitle || column.excerpt}</p>
+              <div class="card-meta">
+                <span class="card-author-img">${(column.author || "G").slice(0, 1)}</span>
+                <span>${column.author}</span>
+                <span class="post-meta-sep">·</span>
+                <span>${formatCardDate(column.date)}</span>
+              </div>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>`;
 }
 
 function renderFeaturedSide(post, number) {

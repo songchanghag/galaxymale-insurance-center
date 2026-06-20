@@ -1,5 +1,5 @@
 /* ================================================================
-   GalaxyMale Tech — 메인 스타일시트
+   GalaxyMale — 메인 스타일시트
    사이트명 수정: assets/js/data.js > SITE_CONFIG.name
    색상 수정: 이 파일 상단 CSS 변수 :root 섹션
    ================================================================ */
@@ -250,6 +250,21 @@ ul, ol { list-style: none; }
 .cat-card-internet { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
 .cat-card-gadget { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
 .cat-icon { font-size: 2rem; margin-bottom: 10px; }
+.cat-icon.cat-image {
+  width: 96px;
+  height: 62px;
+  margin: 0 auto 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(16, 24, 40, .12);
+  background: rgba(255,255,255,.45);
+}
+.cat-icon.cat-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .cat-name { font-size: .95rem; font-weight: 800; color: var(--color-secondary); margin-bottom: 4px; }
 .cat-count { font-size: .78rem; color: var(--color-text-muted); }
 
@@ -296,6 +311,74 @@ ul, ol { list-style: none; }
 }
 .column-author-name { font-size: .82rem; font-weight: 700; color: var(--color-secondary); }
 .column-author-date { font-size: .75rem; color: var(--color-text-muted); }
+
+.column-list-section {
+  margin-bottom: 44px;
+}
+
+.column-list-section h2 {
+  font-size: 1.45rem;
+  margin-bottom: 18px;
+}
+
+.column-author-grid,
+.column-news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.column-author-card,
+.column-news-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.column-author-card {
+  padding: 22px;
+}
+
+.column-news-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.column-news-body {
+  padding: 18px;
+}
+
+.column-news-body .eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--color-primary);
+}
+
+.column-news-body h3 {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.column-news-body p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 860px) {
+  .column-author-grid,
+  .column-news-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ── 운영자 소개 박스 ── */
 .owner-box {

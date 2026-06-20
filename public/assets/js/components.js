@@ -1,5 +1,5 @@
 /* ================================================================
-   GalaxyMale Tech — 공통 헤더/푸터 컴포넌트
+   GalaxyMale — 공통 헤더/푸터 컴포넌트
    ================================================================ */
 
 function renderHeader(activePage) {
@@ -10,7 +10,7 @@ function renderHeader(activePage) {
     <div class="header-inner">
       <a href="/" class="site-logo">
         <div class="logo-icon">G</div>
-        ${cfg.name || 'GalaxyMale Tech'}
+        ${cfg.name || 'GalaxyMale'}
       </a>
       <nav class="site-nav" id="site-nav">
         <a href="/" ${activePage==='home'?'class="active"':''}>홈</a>
@@ -39,7 +39,7 @@ function renderFooter() {
   <div class="container">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="footer-logo">${cfg.name || 'GalaxyMale Tech'}</div>
+        <div class="footer-logo">${cfg.name || 'GalaxyMale'}</div>
         <p class="footer-tagline">${cfg.tagline || '최신 테크 정보를 쉽고 정확하게'}<br>AI, 스마트폰, PC, 보안, IT 가젯 분야의 실용적인 정보를 제공합니다.</p>
         <div class="footer-email">문의: <a href="mailto:${owner.email || ''}">${owner.email || ''}</a></div>
       </div>
@@ -73,7 +73,7 @@ function renderFooter() {
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© ${year} ${cfg.name || 'GalaxyMale Tech'} — 운영: <a href="/author/">${owner.name || '송창학'}</a> | ${owner.address || ''}</div>
+      <div>© ${year} ${cfg.name || 'GalaxyMale'} — 운영: <a href="/author/">${owner.name || '송창학'}</a> | ${owner.address || ''}</div>
       <div class="footer-bottom-links">
         <a href="/privacy/">개인정보처리방침</a>
         <a href="/terms/">이용약관</a>
@@ -86,7 +86,7 @@ function renderFooter() {
 
 function renderMeta(title, desc, url, type) {
   const cfg = window.SITE_CONFIG || {};
-  const siteName = cfg.name || 'GalaxyMale Tech';
+  const siteName = cfg.name || 'GalaxyMale';
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
   return `
   <title>${fullTitle}</title>
