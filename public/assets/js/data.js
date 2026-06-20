@@ -25,12 +25,20 @@ const SITE_CONFIG = {
 };
 
 const CATEGORIES = [
-  { slug: "ai", name: "AI·인공지능", icon: "🤖", color: "ai", desc: "생성형 AI, 이미지 도구, 업무 자동화와 관련된 변화를 생활 뉴스 관점에서 다룹니다.", count: 4 },
-  { slug: "smartphone", name: "스마트폰·모바일", icon: "📱", color: "smartphone", desc: "스마트폰 구매, 설정, 배터리, 앱 관리처럼 매일 쓰는 모바일 환경의 변화를 정리합니다.", count: 4 },
-  { slug: "pc", name: "PC·컴퓨터", icon: "💻", color: "pc", desc: "PC 조립, 운영체제 설정, 저장장치 선택처럼 입문자가 자주 고민하는 주제를 기사형으로 설명합니다.", count: 3 },
-  { slug: "internet", name: "인터넷·보안", icon: "🛡️", color: "internet", desc: "피싱, VPN, 공공 와이파이, 계정 보안 등 온라인 생활에서 필요한 보안 습관을 다룹니다.", count: 4 },
-  { slug: "gadget", name: "가젯·IT기기", icon: "🎧", color: "gadget", desc: "무선 이어폰, 스마트워치, 태블릿처럼 생활형 IT 기기의 선택 기준을 정리합니다.", count: 3 }
+  { slug: "ai", name: "AI인공지능", icon: "🤖", color: "ai", desc: "생성형 AI, 이미지 도구, 업무 자동화와 관련된 변화를 생활 뉴스 관점에서 다룹니다.", count: 4 },
+  { slug: "smartphone", name: "모바일", icon: "📱", color: "smartphone", desc: "스마트폰 구매, 설정, 배터리, 앱 관리처럼 매일 쓰는 모바일 환경의 변화를 정리합니다.", count: 4 },
+  { slug: "pc", name: "컴퓨터", icon: "💻", color: "pc", desc: "PC 조립, 운영체제 설정, 저장장치 선택처럼 입문자가 자주 고민하는 주제를 기사형으로 설명합니다.", count: 3 },
+  { slug: "internet", name: "인터넷/보안", icon: "🛡️", color: "internet", desc: "피싱, VPN, 공공 와이파이, 계정 보안 등 온라인 생활에서 필요한 보안 습관을 다룹니다.", count: 4 },
+  { slug: "gadget", name: "가젯/IT기기", icon: "🎧", color: "gadget", desc: "무선 이어폰, 스마트워치, 태블릿처럼 생활형 IT 기기의 선택 기준을 정리합니다.", count: 3 }
 ];
+
+const CATEGORY_IMAGES = {
+  ai: "/assets/images/articles/ai-news.webp",
+  smartphone: "/assets/images/articles/mobile-news.webp",
+  pc: "/assets/images/articles/pc-news.webp",
+  internet: "/assets/images/articles/security-news.webp",
+  gadget: "/assets/images/articles/gadget-news.webp"
+};
 
 const NEWSROOM_AUTHORS = [
   { name: "김도윤", role: "테크산업 기자" },
@@ -658,6 +666,8 @@ const POSTS = ARTICLE_SEEDS.map((item, index) => ({
   author: item.author || NEWSROOM_AUTHORS[index % NEWSROOM_AUTHORS.length].name,
   authorRole: item.authorRole || NEWSROOM_AUTHORS[index % NEWSROOM_AUTHORS.length].role,
   categoryName: CATEGORIES.find((category) => category.slug === item.category)?.name || item.category,
+  image: item.image || CATEGORY_IMAGES[item.category],
+  imageAlt: `${item.title} 기사 이미지`,
   excerpt: item.subtitle,
   content: articleBody(item, index)
 }));

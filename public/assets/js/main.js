@@ -3,6 +3,7 @@
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
+  normalizeSiteChrome();
   setupMobileMenu();
   markActiveNavigation();
   setupContactForm();
@@ -11,6 +12,54 @@ document.addEventListener("DOMContentLoaded", function () {
   syncPostCardsFromData();
   setupReadingProgress();
 });
+
+function normalizeSiteChrome() {
+  const cfg = window.SITE_CONFIG || {};
+  const categories = window.CATEGORIES || [];
+  const path = window.location.pathname;
+  const nav = document.querySelector(".site-nav");
+
+  if (nav && categories.length) {
+    nav.innerHTML = `
+      <a href="/" ${path === "/" || path === "/index.html" ? 'class="active"' : ""}>홈</a>
+      ${categories.map((category) => `<a href="/categories/${category.slug}/" ${path.startsWith(`/categories/${category.slug}`) ? 'class="active"' : ""}>${category.name}</a>`).join("")}
+    `;
+  }
+
+  const footer = document.querySelector(".site-footer");
+  if (footer && !document.body.classList.contains("admin-wrap")) {
+    const owner = cfg.owner || {};
+    footer.innerHTML = `
+      <div class="container">
+        <div class="footer-news-brand">
+          <a href="/" class="footer-news-logo"><span>G</span>${cfg.name || "GalaxyMale Tech"}</a>
+          <div class="footer-social" aria-label="소셜 링크">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Instagram">◎</a>
+          </div>
+        </div>
+        <div class="footer-news-links">
+          <a href="/about/">매체소개</a>
+          <a href="/contact/">문의 및 기사제보</a>
+          <a href="/privacy/">개인정보처리방침</a>
+          <a href="/terms/">이용약관</a>
+          <a href="/policy/">저작권보호정책</a>
+          <a href="/disclaimer/">청소년보호정책</a>
+          <a href="mailto:${owner.email || ""}">이메일무단수집거부</a>
+        </div>
+        <div class="footer-news-meta">
+          <span>주소 : ${owner.address || "서울특별시 강남구 테헤란로 131"}</span>
+          <span>대표전화 : ${owner.phone || "0507-2834-7925"}</span>
+          <span>제호 : ${cfg.name || "GalaxyMale Tech"}</span>
+          <span>등록번호 : 미등록(정적 정보 사이트)</span>
+          <span>발행·편집인 : ${owner.name || "송창학"}</span>
+          <span>청소년보호책임자 : ${owner.name || "송창학"}</span>
+        </div>
+        <div class="footer-news-contact">문의 : <a href="mailto:${owner.email || ""}">${owner.email || ""}</a></div>
+        <div class="footer-news-copy">Copyright © 2026 ${cfg.name || "GalaxyMale Tech"}. All rights reserved.</div>
+      </div>`;
+  }
+}
 
 function setupMobileMenu() {
   const toggle = document.querySelector(".menu-toggle");
@@ -33,6 +82,7 @@ function markActiveNavigation() {
   document.querySelectorAll(".site-nav a").forEach(function (link) {
     const href = link.getAttribute("href");
     if (!href) return;
+    link.classList.remove("active");
     if (href !== "/" && path.startsWith(href)) link.classList.add("active");
     if (href === "/" && (path === "/" || path === "/index.html")) link.classList.add("active");
   });
@@ -62,7 +112,7 @@ function syncHomeHeroFromData() {
   const featured = posts.find((post) => post.featured) || posts[0];
   if (!featured) return;
 
-  setText(".hero-card-thumb", featured.thumb);
+  setHeroImage(".hero-card-thumb", featured);
   setText(".hero-card-cat", featured.categoryName);
   setText(".hero-card-title", featured.title);
   setText(".hero-card-meta", `${featured.author || "편집부"} · ${formatCardDate(featured.date)}`);
@@ -75,23 +125,10 @@ function syncHomeHeroFromData() {
   });
 }
 
-function syncPostCardsFromData() {
-  const posts = window.POSTS || [];
-  if (!posts.length) return;
-
-  document.querySelectorAll('a[href^="/posts/"]').forEach(function (link) {
-    const post = findPostByLink(link, posts);
-    if (!post) return;
-
-    const card = link.closest(".article-card, .featured-side-card, .hero-mini-card") || link;
-    updatePostCard(card, link, post);
-  });
-}
-
 function renderHomeArticleSections() {
   const posts = window.POSTS || [];
   const path = window.location.pathname;
-  if (!posts.length || !document.body || (path !== "/" && path !== "/index.html")) return;
+  if (!posts.length || (path !== "/" && path !== "/index.html")) return;
 
   const recommended = posts.filter((post) => post.recommended);
   const featuredPosts = (recommended.length ? recommended : posts).slice(0, 5);
@@ -102,11 +139,8 @@ function renderHomeArticleSections() {
 
   const featuredGrid = document.querySelector(".featured-grid");
   if (featuredGrid && featuredPosts.length) {
-    const main = featuredPosts[0];
     featuredGrid.innerHTML = `
-      <div class="featured-main">
-        ${renderArticleCard(main, true)}
-      </div>
+      <div class="featured-main">${renderArticleCard(featuredPosts[0], true)}</div>
       <div class="featured-side">
         ${featuredPosts.slice(1, 5).map((post, index) => renderFeaturedSide(post, index + 1)).join("")}
       </div>`;
@@ -119,11 +153,25 @@ function renderHomeArticleSections() {
   }
 }
 
+function syncPostCardsFromData() {
+  const posts = window.POSTS || [];
+  if (!posts.length) return;
+
+  document.querySelectorAll('a[href^="/posts/"]').forEach(function (link) {
+    const post = findPostByLink(link, posts);
+    if (!post) return;
+    const card = link.closest(".article-card, .featured-side-card, .hero-mini-card") || link;
+    updatePostCard(card, link, post);
+  });
+}
+
 function renderArticleCard(post, large) {
   return `
     <div class="article-card">
       <a href="/posts/${post.slug}/">
-        <div class="card-thumb card-thumb-${post.category}" ${large ? 'style="height:240px;font-size:3.5rem;"' : ""}>${post.thumb || ""}</div>
+        <div class="card-thumb card-thumb-${post.category} news-thumb-image" ${large ? 'style="height:240px;"' : ""}>
+          <img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy">
+        </div>
       </a>
       <div class="card-body">
         <a href="/categories/${post.category}/" class="card-cat">${post.categoryName}</a>
@@ -168,7 +216,7 @@ function updatePostCard(card, link, post) {
   if (sideTitle) sideTitle.textContent = post.title;
   if (excerpt) excerpt.textContent = post.excerpt || post.subtitle || "";
   if (category) category.textContent = post.categoryName || "";
-  if (thumb) thumb.textContent = post.thumb || "";
+  if (thumb) applyThumbImage(thumb, post);
   if (sideDate) sideDate.textContent = formatCardDate(post.date);
 
   updateCardMeta(card, post);
@@ -201,6 +249,20 @@ function updateCardMeta(card, post) {
 
   if (textSpans[0]) textSpans[0].textContent = post.author || "편집부";
   if (textSpans[textSpans.length - 1]) textSpans[textSpans.length - 1].textContent = formatCardDate(post.date);
+}
+
+function setHeroImage(selector, post) {
+  const node = document.querySelector(selector);
+  if (node) applyThumbImage(node, post);
+}
+
+function applyThumbImage(node, post) {
+  if (!post.image) {
+    node.textContent = post.thumb || "";
+    return;
+  }
+  node.classList.add("news-thumb-image");
+  node.innerHTML = `<img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy">`;
 }
 
 function setText(selector, text) {

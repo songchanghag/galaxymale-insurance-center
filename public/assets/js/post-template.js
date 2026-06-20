@@ -1,15 +1,12 @@
 /* ================================================================
    GalaxyMale Tech article renderer
-   Renders post pages in a news-article format.
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", function () {
-  const pathParts = window.location.pathname.split("/").filter(Boolean);
-  const slug = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+  const slug = window.location.pathname.split("/").filter(Boolean).pop();
   const posts = window.POSTS || [];
   const post = posts.find((item) => item.slug === slug);
   const main = document.getElementById("post-main");
-
   if (!main) return;
 
   if (!post) {
@@ -34,22 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const latestPosts = posts
     .filter((item) => item.slug !== post.slug)
     .slice()
-    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .sort((a, b) => String(b.updated || b.date).localeCompare(String(a.updated || a.date)))
     .slice(0, 6);
 
   const popularPosts = posts
     .filter((item) => item.recommended && item.slug !== post.slug)
     .slice(0, 5);
 
-  const categoryItems = [
-    ["ai", "AI·인공지능"],
-    ["smartphone", "스마트폰·모바일"],
-    ["pc", "PC·컴퓨터"],
-    ["internet", "인터넷·보안"],
-    ["gadget", "가젯·IT기기"]
-  ];
-
-  const body = post.content || "";
+  const categoryItems = window.CATEGORIES || [];
+  const url = window.location.href;
 
   main.innerHTML = `
     <div class="container news-article-wrap">
@@ -76,21 +66,43 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </header>
 
-          <div class="news-share-row" aria-label="기사 공유 및 이동">
-            <a href="/categories/${post.category}/">카테고리 더보기</a>
-            <a href="/sitemap/">전체 기사 보기</a>
+          <div class="news-share-tools" aria-label="기사 공유">
+            <button type="button" data-share="kakao">카카오</button>
+            <button type="button" data-share="naver">네이버</button>
+            <button type="button" data-share="facebook">Facebook</button>
+            <button type="button" data-share="x">X</button>
+            <button type="button" data-share="copy">URL 복사</button>
           </div>
 
+          ${post.image ? `
+            <figure class="news-cover">
+              <img src="${post.image}" alt="${post.imageAlt || post.title}" loading="eager">
+              <figcaption>${post.categoryName} 기사 이미지 / GalaxyMale Tech</figcaption>
+            </figure>
+          ` : ""}
+
           <div class="news-content">
-            ${body}
+            ${post.content || ""}
           </div>
+
+          <section class="news-tag-section" aria-label="태그">
+            <span>태그:</span>
+            ${(post.tags || []).map((tag) => `<a href="/categories/${post.category}/">${tag}</a>`).join("")}
+          </section>
+
+          <section class="news-comment-section" aria-label="댓글 남기기">
+            <h2>댓글 남기기</h2>
+            <p>이 댓글 기능은 정적 사이트용 데모입니다. 입력 내용은 현재 브라우저 localStorage에만 저장됩니다.</p>
+            <div class="news-comment-form">
+              <textarea id="comment-input" rows="3" placeholder="의견을 입력하세요."></textarea>
+              <button type="button" id="comment-submit">등록</button>
+            </div>
+            <div id="comment-list" class="news-comment-list"></div>
+          </section>
 
           <footer class="news-article-footer">
             <p>이 기사는 GalaxyMale Tech 편집 기준에 따라 작성되었으며, 제품·서비스 정보는 이용 환경과 시점에 따라 달라질 수 있습니다.</p>
             <p>운영 과정에서 내용은 순차적으로 보완될 수 있으며, 문의는 <a href="/contact/">문의하기</a> 페이지의 이메일 경로를 이용해 주세요.</p>
-            <div class="news-tags">
-              ${(post.tags || []).map((tag) => `<a href="/categories/${post.category}/">#${tag}</a>`).join("")}
-            </div>
           </footer>
 
           <section class="news-editor-box" aria-label="기사 작성자와 편집 기준">
@@ -104,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ${
             relatedPosts.length
               ? `<section class="news-related" aria-labelledby="related-title">
-                  <h2 id="related-title">관련 기사</h2>
+                  <h2 id="related-title">함께 보면 좋은 콘텐츠</h2>
                   <div class="news-related-grid">
                     ${relatedPosts.map(renderRelatedCard).join("")}
                   </div>
@@ -115,24 +127,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <aside class="news-sidebar" aria-label="사이드바">
           <section class="news-side-box">
-            <h2>최신 기사</h2>
+            <h2>최신 콘텐츠</h2>
             ${latestPosts.map(renderSidePost).join("")}
           </section>
 
           <section class="news-side-box">
-            <h2>추천 기사</h2>
+            <h2>추천 콘텐츠</h2>
             ${(popularPosts.length ? popularPosts : latestPosts).slice(0, 5).map(renderSidePost).join("")}
           </section>
 
           <section class="news-side-box">
             <h2>카테고리</h2>
             <div class="news-category-list">
-              ${categoryItems.map(([key, label]) => `<a href="/categories/${key}/">${label}</a>`).join("")}
+              ${categoryItems.map((category) => `<a href="/categories/${category.slug}/">${category.name}</a>`).join("")}
             </div>
           </section>
         </aside>
       </div>
     </div>`;
+
+  setupShareButtons(post, url);
+  setupLocalComments(post.slug);
 });
 
 function formatDate(value) {
@@ -146,6 +161,7 @@ function formatDate(value) {
 function renderRelatedCard(post) {
   return `
     <a class="news-related-card" href="/posts/${post.slug}/">
+      ${post.image ? `<img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy">` : ""}
       <span>${post.categoryName}</span>
       <strong>${post.title}</strong>
       <time datetime="${post.date}">${formatDate(post.date)}</time>
@@ -155,9 +171,81 @@ function renderRelatedCard(post) {
 function renderSidePost(post) {
   return `
     <a class="news-side-post" href="/posts/${post.slug}/">
+      ${post.image ? `<img src="${post.image}" alt="${post.imageAlt || post.title}" loading="lazy">` : ""}
       <span>${post.categoryName} | ${formatDate(post.date)}</span>
       <strong>${post.title}</strong>
     </a>`;
+}
+
+function setupShareButtons(post, url) {
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(post.title);
+  document.querySelectorAll("[data-share]").forEach((button) => {
+    button.addEventListener("click", async function () {
+      const type = button.dataset.share;
+      if (type === "copy") {
+        try {
+          await navigator.clipboard.writeText(url);
+          button.textContent = "복사됨";
+          setTimeout(() => (button.textContent = "URL 복사"), 1600);
+        } catch {
+          window.prompt("URL을 복사하세요.", url);
+        }
+        return;
+      }
+      const links = {
+        kakao: `https://story.kakao.com/share?url=${encodedUrl}`,
+        naver: `https://share.naver.com/web/shareView?url=${encodedUrl}&title=${encodedTitle}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        x: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`
+      };
+      window.open(links[type], "_blank", "noopener,noreferrer,width=720,height=520");
+    });
+  });
+}
+
+function setupLocalComments(slug) {
+  const key = `gm_comments_${slug}`;
+  const input = document.getElementById("comment-input");
+  const submit = document.getElementById("comment-submit");
+  const list = document.getElementById("comment-list");
+  if (!input || !submit || !list) return;
+
+  function getComments() {
+    try {
+      return JSON.parse(localStorage.getItem(key) || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function render() {
+    const comments = getComments();
+    list.innerHTML = comments.length
+      ? comments.map((item) => `<div class="news-comment-item"><strong>방문자</strong><time>${item.date}</time><p>${escapeHtml(item.text)}</p></div>`).join("")
+      : `<p class="news-comment-empty">아직 등록된 댓글이 없습니다.</p>`;
+  }
+
+  submit.addEventListener("click", function () {
+    const text = input.value.trim();
+    if (!text) return;
+    const comments = getComments();
+    comments.unshift({ text, date: new Date().toISOString().slice(0, 10) });
+    localStorage.setItem(key, JSON.stringify(comments.slice(0, 20)));
+    input.value = "";
+    render();
+  });
+
+  render();
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function injectArticleJsonLd(post) {
@@ -175,41 +263,20 @@ function injectArticleJsonLd(post) {
         "@type": "NewsArticle",
         "headline": post.title,
         "description": post.subtitle || post.excerpt || post.title,
+        "image": post.image ? `${cfg.url || "https://galaxymale.com"}${post.image}` : undefined,
         "datePublished": post.date,
         "dateModified": post.updated || post.date,
-        "author": {
-          "@type": "Person",
-          "name": post.author || cfg.owner?.name || "GalaxyMale 편집부"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": cfg.name || "GalaxyMale Tech",
-          "url": cfg.url || "https://galaxymale.com"
-        },
+        "author": { "@type": "Person", "name": post.author || cfg.owner?.name || "GalaxyMale 편집부" },
+        "publisher": { "@type": "Organization", "name": cfg.name || "GalaxyMale Tech", "url": cfg.url || "https://galaxymale.com" },
         "mainEntityOfPage": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/`,
         "inLanguage": "ko-KR"
       },
       {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "홈",
-            "item": cfg.url || "https://galaxymale.com"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": post.categoryName,
-            "item": `${cfg.url || "https://galaxymale.com"}/categories/${post.category}/`
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": post.title,
-            "item": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/`
-          }
+          { "@type": "ListItem", "position": 1, "name": "홈", "item": cfg.url || "https://galaxymale.com" },
+          { "@type": "ListItem", "position": 2, "name": post.categoryName, "item": `${cfg.url || "https://galaxymale.com"}/categories/${post.category}/` },
+          { "@type": "ListItem", "position": 3, "name": post.title, "item": `${cfg.url || "https://galaxymale.com"}/posts/${post.slug}/` }
         ]
       }
     ]
