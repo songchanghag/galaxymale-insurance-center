@@ -1,21 +1,12 @@
-# 보험업무 자료센터
+# GalaxyMale Tech Static Site
 
-Cloudflare Worker 기반 정적 정보 사이트입니다.
+This repository deploys the static `public/` site to Cloudflare Workers Static Assets for `galaxymale.com`.
 
 ## Commands
 
-- `npm run check`
-- `npm run dev`
-- `npm run deploy`
+```bash
+npm run check
+npm run deploy
+```
 
-## Pages
-
-- `/`
-- `/claim-documents/`
-- `/fax/`
-- `/monitoring/`
-- `/insurance-terms/`
-- `/about/`
-- `/contact/`
-- `/privacy/`
-- `/terms/`
+The source site was imported from `galaxymale-site.tar.gz`.

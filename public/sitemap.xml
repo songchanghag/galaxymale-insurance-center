@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+
+  <!-- 주요 페이지 -->
+  <url><loc>https://galaxymale.com/</loc><changefreq>daily</changefreq><priority>1.0</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/categories/</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/columns/</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/about/</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/author/</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/contact/</loc><changefreq>monthly</changefreq><priority>0.6</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/privacy/</loc><changefreq>yearly</changefreq><priority>0.4</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/terms/</loc><changefreq>yearly</changefreq><priority>0.4</priority><lastmod>2026-01-01</lastmod></url>
+  <url><loc>https://galaxymale.com/disclaimer/</loc><changefreq>yearly</changefreq><priority>0.4</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/sitemap/</loc><changefreq>weekly</changefreq><priority>0.5</priority><lastmod>2026-06-20</lastmod></url>
+
+  <!-- 카테고리 페이지 -->
+  <url><loc>https://galaxymale.com/categories/ai/</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/categories/smartphone/</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/categories/pc/</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/categories/internet/</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-06-20</lastmod></url>
+  <url><loc>https://galaxymale.com/categories/gadget/</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-06-20</lastmod></url>
+
+  <!-- 칼럼 -->
+  <url><loc>https://galaxymale.com/columns/ai-digital-literacy/</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/columns/smartphone-decade-reflection/</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-20</lastmod></url>
+  <url><loc>https://galaxymale.com/columns/tech-purchase-beyond-specs/</loc><changefreq>monthly</changefreq><priority>0.8</priority><lastmod>2026-05-10</lastmod></url>
+
+  <!-- AI 아티클 -->
+  <url><loc>https://galaxymale.com/posts/chatgpt-beginners-guide/</loc><changefreq>monthly</changefreq><priority>0.9</priority><lastmod>2026-06-15</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/chatgpt-prompt-writing/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-06-04</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/ai-image-tools-comparison/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-25</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/ai-daily-use-tips/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-18</lastmod></url>
+
+  <!-- 스마트폰 아티클 -->
+  <url><loc>https://galaxymale.com/posts/galaxy-vs-iphone-comparison/</loc><changefreq>monthly</changefreq><priority>0.9</priority><lastmod>2026-06-05</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/smartphone-battery-tips/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-30</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/android-beginner-settings/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-22</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/mobile-app-management/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-15</lastmod></url>
+
+  <!-- PC 아티클 -->
+  <url><loc>https://galaxymale.com/posts/pc-assembly-beginners/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-28</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/pc-windows11-setup/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-20</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/pc-storage-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-12</lastmod></url>
+
+  <!-- 인터넷·보안 아티클 -->
+  <url><loc>https://galaxymale.com/posts/internet-security-basics/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-06-02</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/phishing-prevention-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-25</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/vpn-beginners-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-18</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/public-wifi-safety/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-10</lastmod></url>
+
+  <!-- 가젯 아티클 -->
+  <url><loc>https://galaxymale.com/posts/wireless-earbuds-buying-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-06-01</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/gadget-smartwatch-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-22</lastmod></url>
+  <url><loc>https://galaxymale.com/posts/gadget-tablet-guide/</loc><changefreq>monthly</changefreq><priority>0.85</priority><lastmod>2026-05-14</lastmod></url>
+
+</urlset>
