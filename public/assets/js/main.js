@@ -1,4 +1,4 @@
-/* ================================================================
+﻿/* ================================================================
    GalaxyMale common scripts
    ================================================================ */
 
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function ensureBrandIcon() {
-  const iconHref = "/favicon.svg?v=gm-icon-v1";
+  const iconHref = "/favicon.svg?v=gm-icon-v2";
   let icon = document.querySelector('link[rel="icon"]');
   if (!icon) {
     icon = document.createElement("link");
@@ -40,7 +40,7 @@ function ensureBrandIcon() {
   if (!document.querySelector('link[rel="manifest"]')) {
     const manifest = document.createElement("link");
     manifest.rel = "manifest";
-    manifest.href = "/site.webmanifest?v=gm-icon-v1";
+    manifest.href = "/site.webmanifest?v=gm-icon-v2";
     document.head.appendChild(manifest);
   }
 }

@@ -1,9 +1,9 @@
-{
+﻿{
   "name": "GalaxyMale",
   "short_name": "GalaxyMale",
   "icons": [
     {
-      "src": "/favicon.svg?v=gm-icon-v1",
+      "src": "/favicon.svg?v=gm-icon-v2",
       "sizes": "any",
       "type": "image/svg+xml"
     }

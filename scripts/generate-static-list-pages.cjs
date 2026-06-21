@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
@@ -43,9 +43,9 @@ function head({ title, description, url, image = "/assets/icons/galaxymale-icon.
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="https://galaxymale.com${image}">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
 <link rel="stylesheet" href="/assets/css/style.css">
 </head>`;
 }

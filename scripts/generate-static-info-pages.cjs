@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 
 const site = {
@@ -55,9 +55,9 @@ function shell({ slug, title, description, content }) {
 <meta property="og:url" content="${site.url}/${slug}/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${site.name}">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
 <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>

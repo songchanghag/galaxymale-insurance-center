@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 const sharp = require("sharp");
@@ -99,7 +99,7 @@ function svgFor(item, type) {
     <text x="104" y="510" font-family="Arial, sans-serif" font-size="24" font-weight="900" fill="${scene.accent}">${esc(label)}</text>
     ${lines.map((line, i) => `<text x="104" y="${552 + i * 35}" font-family="Arial, sans-serif" font-size="31" font-weight="900" fill="#ffffff">${line}</text>`).join("")}
     <text x="104" y="623" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="rgba(255,255,255,.72)">${subtitle.slice(0, 50)}</text>
-    <image href="/favicon.svg?v=gm-icon-v1" x="1032" y="72" width="92" height="92"/>
+    <image href="/favicon.svg?v=gm-icon-v2" x="1032" y="72" width="92" height="92"/>
   </svg>`;
 }
 

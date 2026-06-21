@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
@@ -71,9 +71,9 @@ function page(column) {
 <meta name="twitter:title" content="${esc(column.title)} | GalaxyMale">
 <meta name="twitter:description" content="${esc(column.subtitle || column.excerpt || column.title)}">
 <meta name="twitter:image" content="https://galaxymale.com${column.image}">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
 <link rel="stylesheet" href="/assets/css/style.css">
 <script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",

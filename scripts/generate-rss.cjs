@@ -82,4 +82,5 @@ ${items
 `;
 
 fs.writeFileSync("public/rss.xml", xml, "utf8");
+fs.writeFileSync("public/rss", xml, "utf8");
 console.log(`generated rss with ${items.length} items`);
