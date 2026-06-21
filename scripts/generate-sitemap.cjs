@@ -26,7 +26,6 @@ for (const slug of ["privacy", "terms", "policy", "youth", "email-rejection", "d
   add(`/${slug}/`, "yearly", "0.4", "2026-01-01");
 }
 
-add("/sitemap/", "weekly", "0.5", "2026-06-20");
 add("/rss.xml", "daily", "0.4", "2026-06-20");
 
 for (const category of categories) {

@@ -53,7 +53,6 @@ const requiredPages = [
   "disclaimer/index.html",
   "youth/index.html",
   "email-rejection/index.html",
-  "sitemap/index.html",
   "404.html",
   "robots.txt",
   "ads.txt",

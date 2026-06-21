@@ -83,20 +83,6 @@ write("public/author/index.html", page(
   </main>`,
 ));
 
-write("public/sitemap/index.html", page(
-  "사이트맵",
-  "GalaxyMale 전체 페이지와 기사 목록입니다.",
-  `<main class="container media-page">
-    <h1>사이트맵</h1>
-    <section class="sitemap-grid">
-      <div><h2>기본 페이지</h2><ul><li><a href="/">홈</a></li><li><a href="/about/">매체소개</a></li><li><a href="/contact/">문의 및 기사제보</a></li><li><a href="/privacy/">개인정보처리방침</a></li><li><a href="/terms/">이용약관</a></li><li><a href="/policy/">저작권보호정책</a></li><li><a href="/youth/">청소년보호정책</a></li><li><a href="/email-rejection/">이메일무단수집거부</a></li><li><a href="/disclaimer/">면책고지</a></li></ul></div>
-      <div><h2>카테고리</h2><ul>${categories.map((category) => `<li><a href="/categories/${category.slug}/">${category.name}</a></li>`).join("")}</ul></div>
-      <div><h2>칼럼</h2><ul>${columns.map((column) => `<li><a href="/columns/${column.slug}/">${column.title}</a></li>`).join("")}</ul></div>
-      <div><h2>기사</h2><ul>${posts.map((post) => `<li><a href="/posts/${post.slug}/">${post.title}</a></li>`).join("")}</ul></div>
-    </section>
-  </main>`,
-));
-
 write("public/posts/post.html", page(
   "기사 안내",
   "GalaxyMale 기사 목록 안내입니다.",

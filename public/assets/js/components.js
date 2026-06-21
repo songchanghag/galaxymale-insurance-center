@@ -60,7 +60,7 @@ function renderFooter() {
           <li><a href="/author/">운영자 소개</a></li>
           <li><a href="/columns/">칼럼</a></li>
           <li><a href="/contact/">문의하기</a></li>
-          <li><a href="/sitemap/">사이트맵</a></li>
+          <li><a href="/sitemap.xml">사이트맵</a></li>
         </ul>
       </div>
       <div class="footer-col">
