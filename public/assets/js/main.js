@@ -4,6 +4,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   ensureBrandIcon();
+  disableImageAssistOverlays();
   normalizeSiteChrome();
   setupMobileMenu();
   markActiveNavigation();
@@ -17,6 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
   syncPostCardsFromData();
   setupReadingProgress();
 });
+
+function disableImageAssistOverlays() {
+  document.querySelectorAll("img").forEach((image) => {
+    image.setAttribute("draggable", "false");
+    image.setAttribute("data-visualsearch", "false");
+    image.setAttribute("data-no-visual-search", "true");
+    image.setAttribute("data-no-image-preview", "true");
+  });
+}
 
 function ensureBrandIcon() {
   const iconHref = "/favicon.svg?v=gm-icon-v1";

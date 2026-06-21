@@ -123,16 +123,6 @@ ${header("home")}
           <p class="hero-desc">GalaxyMale은 AI, 모바일, PC, 보안, IT 기기를 과장 없이 해설하는 정보형 뉴스 사이트입니다.</p>
           <div class="hero-cta"><a href="/categories/" class="btn-primary">카테고리 보기</a><a href="/about/" class="btn-ghost">매체 소개</a></div>
         </div>
-        <div class="hero-card-area">
-          <article class="hero-featured-card">
-            <img class="hero-card-image" src="${latest[0].image}" alt="${esc(latest[0].imageAlt || latest[0].title)}" loading="eager">
-            <div class="hero-card-body">
-              <div class="hero-card-cat">${esc(latest[0].categoryName)}</div>
-              <div class="hero-card-title"><a href="/posts/${latest[0].slug}/">${esc(latest[0].title)}</a></div>
-              <div class="hero-card-meta">${esc(latest[0].author)} · ${fmt(latest[0].date)}</div>
-            </div>
-          </article>
-        </div>
       </div>
     </div>
   </section>
