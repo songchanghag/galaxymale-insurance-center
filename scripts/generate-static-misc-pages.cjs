@@ -34,9 +34,9 @@ function page(title, description, body) {
 <title>${title} | ${site.name}</title>
 <meta name="description" content="${description}">
 <meta name="robots" content="index, follow">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
 <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>${nav}${body}${footer}</body>
@@ -110,9 +110,9 @@ write("public/admin/index.html", `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>관리자 페이지 | ${site.name}</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
 <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body class="admin-body">

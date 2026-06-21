@@ -97,9 +97,9 @@ function page(post) {
 <meta name="twitter:title" content="${esc(post.title)} | GalaxyMale">
 <meta name="twitter:description" content="${esc(post.subtitle || post.excerpt || post.title)}">
 <meta name="twitter:image" content="https://galaxymale.com${post.image}">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v2">
-<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v2">
-<link rel="manifest" href="/site.webmanifest?v=gm-icon-v2">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=gm-icon-v1">
+<link rel="shortcut icon" href="/favicon.svg?v=gm-icon-v1">
+<link rel="manifest" href="/site.webmanifest?v=gm-icon-v1">
 <link rel="stylesheet" href="/assets/css/style.css">
 <script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
