@@ -41,7 +41,7 @@ function renderFooter() {
       <div class="footer-brand">
         <div class="footer-logo">${cfg.name || 'GalaxyMale'}</div>
         <p class="footer-tagline">${cfg.tagline || '최신 테크 정보를 쉽고 정확하게'}<br>AI, 스마트폰, PC, 보안, IT 가젯 분야의 실용적인 정보를 제공합니다.</p>
-        <div class="footer-email">문의: <a href="mailto:${owner.email || ''}">${owner.email || ''}</a></div>
+        <div class="footer-email">문의: <a href="mailto:admin@galaxymale.com">admin@galaxymale.com</a></div>
       </div>
       <div class="footer-col">
         <h4>카테고리</h4>

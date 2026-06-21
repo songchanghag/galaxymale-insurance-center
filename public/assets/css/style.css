@@ -1651,6 +1651,18 @@ ul, ol { list-style: none; }
   width: auto;
 }
 
+.privacy-consent-list {
+  display: grid;
+  gap: 18px;
+  margin: 18px 0 22px;
+  color: #111827;
+  line-height: 1.8;
+}
+
+.privacy-consent-list p {
+  margin: 0;
+}
+
 .contact-privacy-note {
   margin: 0;
   padding-left: 18px;

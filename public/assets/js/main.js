@@ -92,7 +92,7 @@ function normalizeSiteChrome() {
           <span>발행·편집인 : ${owner.name || "송창학"}</span>
           <span>청소년보호책임자 : ${owner.name || "송창학"}</span>
         </div>
-        <div class="footer-news-contact">문의 : <a href="mailto:${owner.email || ""}">${owner.email || ""}</a></div>
+        <div class="footer-news-contact">문의 : <a href="mailto:admin@galaxymale.com">admin@galaxymale.com</a></div>
         <div class="footer-news-copy">Copyright © 2026 ${cfg.name || "GalaxyMale"}. All rights reserved.</div>
       </div>`;
   }
