@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function ensureBrandIcon() {
-  const iconHref = "/favicon.svg?v=20260107";
+  const iconHref = "/favicon.svg?v=gm-icon-v1";
   let icon = document.querySelector('link[rel="icon"]');
   if (!icon) {
     icon = document.createElement("link");
@@ -40,7 +40,7 @@ function ensureBrandIcon() {
   if (!document.querySelector('link[rel="manifest"]')) {
     const manifest = document.createElement("link");
     manifest.rel = "manifest";
-    manifest.href = "/site.webmanifest?v=20260107";
+    manifest.href = "/site.webmanifest?v=gm-icon-v1";
     document.head.appendChild(manifest);
   }
 }
@@ -333,12 +333,19 @@ function renderHomeColumnPreview() {
     const column = columns[index];
     if (!column) return;
     const badge = card.querySelector(".column-badge");
+    const thumbLink = card.querySelector(".column-thumb");
+    const thumbImage = card.querySelector(".column-thumb img");
     const title = card.querySelector(".column-title a");
     const excerpt = card.querySelector(".column-excerpt");
     const icon = card.querySelector(".column-author-img");
     const author = card.querySelector(".column-author-name a");
     const date = card.querySelector(".column-author-date");
     if (badge) badge.textContent = "COLUMN";
+    if (thumbLink) thumbLink.href = `/columns/${column.slug}/`;
+    if (thumbImage) {
+      thumbImage.src = column.image;
+      thumbImage.alt = column.imageAlt || column.title;
+    }
     if (title) {
       title.textContent = column.title;
       title.href = `/columns/${column.slug}/`;
