@@ -17,7 +17,7 @@
     <h1>GalaxyMale</h1>
     <p>관리자 로그인</p>
     <label>비밀번호<input id="admin-password" type="password" placeholder="관리자 비밀번호 입력"></label>
-    <button class="btn-primary" onclick="loginAdmin()">로그인</button>
+    <button class="btn-primary" type="button" onclick="loginAdmin()">로그인</button>
     <p class="admin-note">데모 비밀번호: galaxymale2026</p>
     <p class="admin-warning">정적 사이트용 CMS-lite 데모이며 실제 보안 관리자 시스템이 아닙니다.</p>
   </section>
@@ -35,12 +35,13 @@
 <script>
 const posts = window.POSTS || [];
 const columns = window.COLUMNS || [];
-function loginAdmin(){ if(document.getElementById('admin-password').value === 'galaxymale2026'){ localStorage.setItem('gmAdminSession','active'); document.getElementById('admin-login').hidden = true; document.getElementById('admin-panel').hidden = false; renderAdminLists(); } else alert('비밀번호가 올바르지 않습니다.'); }
-function logoutAdmin(){ localStorage.removeItem('gmAdminSession'); location.reload(); }
+function setAdminView(isActive){ const login = document.getElementById('admin-login'); const panel = document.getElementById('admin-panel'); login.hidden = isActive; panel.hidden = !isActive; login.style.display = isActive ? 'none' : ''; panel.style.display = isActive ? 'grid' : 'none'; if(isActive) renderAdminLists(); }
+function loginAdmin(){ if(document.getElementById('admin-password').value === 'galaxymale2026'){ localStorage.setItem('gmAdminSession','active'); localStorage.setItem('gm_admin_session','true'); setAdminView(true); } else alert('비밀번호가 올바르지 않습니다.'); }
+function logoutAdmin(){ localStorage.removeItem('gmAdminSession'); localStorage.removeItem('gm_admin_session'); location.reload(); }
 function showAdminTab(name){ document.querySelectorAll('[data-admin-tab]').forEach((el)=>{ el.hidden = el.dataset.adminTab !== name; }); }
 function renderAdminLists(){ document.getElementById('admin-post-list').innerHTML = posts.slice(0,12).map((p)=>'<article class="admin-list-card"><strong>'+p.title+'</strong><span>'+p.author+' · '+p.date+'</span></article>').join(''); document.getElementById('admin-column-list').innerHTML = columns.map((c)=>'<article class="admin-list-card"><strong>'+c.title+'</strong><span>'+c.author+' · '+c.date+'</span></article>').join(''); }
 function exportCmsData(){ const blob = new Blob([JSON.stringify({ posts, columns }, null, 2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'galaxymale-cms-export.json'; a.click(); }
-if(localStorage.getItem('gmAdminSession') === 'active'){ document.getElementById('admin-login').hidden = true; document.getElementById('admin-panel').hidden = false; renderAdminLists(); }
+setAdminView(localStorage.getItem('gmAdminSession') === 'active' || localStorage.getItem('gm_admin_session') === 'true');
 </script>
 </body>
 </html>
